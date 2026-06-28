@@ -440,6 +440,16 @@ public class ItemDetailFragment extends KeyDwonFragment {
         flPhotoContainer.setVisibility(View.VISIBLE);
         vpPhotos.setAdapter(new PhotoPagerAdapter());
 
+        // Set ViewPager height to 4:3 ratio
+        vpPhotos.post(() -> {
+            int width = vpPhotos.getWidth();
+            if (width > 0) {
+                ViewGroup.LayoutParams lp = vpPhotos.getLayoutParams();
+                lp.height = width * 3 / 4;
+                vpPhotos.setLayoutParams(lp);
+            }
+        });
+
         if (photoPaths.size() > 1) {
             tvPhotoIndicator.setVisibility(View.VISIBLE);
             tvPhotoIndicator.setText("1/" + photoPaths.size());
@@ -459,7 +469,7 @@ public class ItemDetailFragment extends KeyDwonFragment {
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             ImageView iv = new ImageView(mContext);
-            iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
             iv.setBackgroundColor(0xFFEEEEEE);
 
             String path = photoPaths.get(position);

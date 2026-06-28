@@ -483,6 +483,10 @@ public class WarehouseFragment extends KeyDwonFragment {
     // ==================== List View (ExpandableListView) ====================
 
     private void renderList() {
+        // Hide grid view elements
+        rvGridView.setVisibility(View.GONE);
+        tvGridEmpty.setVisibility(View.GONE);
+        // Show/hide list view elements
         if (filteredGroups.isEmpty()) {
             elvWhList.setVisibility(View.GONE);
             tvEmpty.setVisibility(View.VISIBLE);
@@ -620,6 +624,10 @@ public class WarehouseFragment extends KeyDwonFragment {
     // ==================== Grid View Rendering ====================
 
     private void renderGrid() {
+        // Hide list view elements
+        elvWhList.setVisibility(View.GONE);
+        tvEmpty.setVisibility(View.GONE);
+        // Show/hide grid view elements
         if (flatFilteredItems.isEmpty()) {
             tvGridEmpty.setVisibility(View.VISIBLE);
             rvGridView.setVisibility(View.GONE);
