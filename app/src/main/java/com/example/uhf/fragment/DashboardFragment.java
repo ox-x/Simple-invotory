@@ -123,6 +123,7 @@ public class DashboardFragment extends KeyDwonFragment {
 
         builder.setPositiveButton("确定", null);
         builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
+        builder.setNeutralButton("忘记密码？重置", null);
 
         final AlertDialog dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
@@ -138,9 +139,29 @@ public class DashboardFragment extends KeyDwonFragment {
                     etPassword.setText("");
                 }
             });
+
+            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(v -> {
+                showResetPasswordConfirmationDialog(dialog, featureLabel, targetFragment);
+            });
         });
 
         dialog.show();
+    }
+
+    /**
+     * 显示重置密码确认对话框。
+     */
+    private void showResetPasswordConfirmationDialog(AlertDialog passwordDialog, String featureLabel, Class<?> targetFragment) {
+        new AlertDialog.Builder(mContext)
+                .setTitle("重置密码")
+                .setMessage("确定要将密码重置为默认值吗？")
+                .setPositiveButton("确定", (confirmDialog, which) -> {
+                    setAdminPassword(mContext, DEFAULT_PASSWORD);
+                    Toast.makeText(mContext, "密码已重置为默认值", Toast.LENGTH_SHORT).show();
+                    passwordDialog.dismiss();
+                })
+                .setNegativeButton("取消", null)
+                .show();
     }
 
     @Override
