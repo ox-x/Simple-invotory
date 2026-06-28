@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F0F0F0">
+
+    <!-- Top Toolbar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#3F51B5"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <!-- Student ID row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/etStudentId"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:background="#FFFFFF"
+                android:hint="@string/checkout_student_id"
+                android:inputType="text"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:singleLine="true"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/btnConfirmStudent"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_marginStart="4dp"
+                android:background="#4CAF50"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:text="OK"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvStudentStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="#CCFFFFFF"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <!-- Power Control -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp">
+
+        <TextView
+            android:id="@+id/tvCheckoutPower"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:text="@string/power_label"
+            android:textColor="#666666"
+            android:textSize="12sp" />
+
+        <SeekBar
+            android:id="@+id/seekBarCheckoutPower"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:max="29"
+            android:progress="25" />
+    </LinearLayout>
+
+    <!-- Action Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="4dp">
+
+        <Button
+            android:id="@+id/btnContinuousScan"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_bg"
+            android:text="@string/br_continuous_scan"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btnStopScan"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_bg_gray"
+            android:enabled="false"
+            android:text="@string/br_stop_scan"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- Filter + Bulk Actions Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:paddingBottom="4dp">
+
+        <Button
+            android:id="@+id/btnFilterAll"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:background="#3F51B5"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:text="@string/br_filter_all"
+            android:textColor="@color/white"
+            android:textSize="11sp" />
+
+        <Button
+            android:id="@+id/btnFilterInStock"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_marginStart="2dp"
+            android:background="#9E9E9E"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:text="@string/br_filter_in_stock"
+            android:textColor="@color/white"
+            android:textSize="11sp" />
+
+        <Button
+            android:id="@+id/btnFilterBorrowed"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_marginStart="2dp"
+            android:background="#9E9E9E"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:text="@string/br_filter_borrowed"
+            android:textColor="@color/white"
+            android:textSize="11sp" />
+
+        <Button
+            android:id="@+id/btnFilterAudited"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_marginStart="2dp"
+            android:background="#9E9E9E"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:text="@string/br_filter_audited"
+            android:textColor="@color/white"
+            android:textSize="11sp" />
+
+        <Button
+            android:id="@+id/btnFilterNotAudited"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_marginStart="2dp"
+            android:background="#9E9E9E"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:text="@string/br_filter_not_audited"
+            android:textColor="@color/white"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <!-- Pending Actions Confirmation Bar -->
+    <LinearLayout
+        android:id="@+id/llConfirmBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFF3E0"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="4dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvPendingCount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#E65100"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnConfirmAction"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:background="#4CAF50"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/ok"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btnCancelAction"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginStart="4dp"
+            android:background="#9E9E9E"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/cancel"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- Bulk Actions Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:paddingBottom="4dp">
+
+        <Button
+            android:id="@+id/btnBulkAll"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:background="#FF5722"
+            android:text="@string/br_bulk_all"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btnCancelAll"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:background="#757575"
+            android:text="@string/br_cancel_all"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tvSummary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textColor="#333333"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Scan Status -->
+    <TextView
+        android:id="@+id/tvScanStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#E8E8E8"
+        android:padding="4dp"
+        android:text="@string/br_scan_status_ready"
+        android:textColor="#666666"
+        android:textSize="12sp" />
+
+    <!-- Expandable List -->
+    <ExpandableListView
+        android:id="@+id/elvItems"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="#CCCCCC"
+        android:dividerHeight="1dp"
+        android:childDivider="#EEEEEE" />
+
+</LinearLayout>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FAFAFA"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="40dp"
+    android:paddingEnd="8dp"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp">
+
+    <!-- Name (clickable) -->
+    <TextView
+        android:id="@+id/tvSiChildName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="13sp" />
+
+    <!-- EPC (truncated) -->
+    <TextView
+        android:id="@+id/tvSiChildEpc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="middle"
+        android:singleLine="true"
+        android:textColor="#999999"
+        android:textSize="10sp"
+        android:maxWidth="80dp" />
+
+    <!-- Borrow status -->
+    <TextView
+        android:id="@+id/tvSiChildBorrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:minWidth="48dp"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+
+    <!-- Delete button -->
+    <Button
+        android:id="@+id/btnSiChildDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:background="@drawable/button_bg_gray"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:minHeight="28dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="1dp"
+        android:paddingBottom="1dp"
+        android:text="@string/stockin_delete_record"
+        android:textColor="@color/white"
+        android:textSize="10sp" />
+</LinearLayout>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FAFAFA"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="40dp"
+    android:paddingEnd="8dp"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp">
+
+    <!-- Name -->
+    <TextView
+        android:id="@+id/tvChildName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="13sp" />
+
+    <!-- EPC (truncated) -->
+    <TextView
+        android:id="@+id/tvChildEpc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="middle"
+        android:singleLine="true"
+        android:textColor="#999999"
+        android:textSize="10sp"
+        android:maxWidth="80dp" />
+
+    <!-- Audit status -->
+    <TextView
+        android:id="@+id/tvChildAudit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:minWidth="48dp"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+
+    <!-- Borrow status -->
+    <TextView
+        android:id="@+id/tvChildBorrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+
+    <!-- Borrow/Return action button -->
+    <Button
+        android:id="@+id/btnChildBorrowReturn"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:background="@drawable/button_bg"
+        android:enabled="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:minHeight="32dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:text="借"
+        android:textColor="@color/white"
+        android:textSize="13sp" />
+</LinearLayout>
