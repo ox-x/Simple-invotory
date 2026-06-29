@@ -347,10 +347,10 @@ public class ItemDetailFragment extends KeyDwonFragment {
 
     private void fillBoxInfo(BoxInfo box) {
         tvTitle.setText(box.toString());
-        tvEpc.setText("TID: " + na(box.epc));
-        tvShortId.setText("简称: " + na(box.shortId));
-        tvDesc.setText("描述: " + na(box.description));
-        tvType.setText("类型: 箱子 (BOX)");
+        tvEpc.setText(getString(R.string.detail_tid, na(box.epc)));
+        tvShortId.setText(getString(R.string.detail_short_id, na(box.shortId)));
+        tvDesc.setText(getString(R.string.detail_desc, na(box.description)));
+        tvType.setText(getString(R.string.detail_type_box_full));
         llBoxInfo.setVisibility(View.GONE);
 
         setBorrowStatusText(dbHelper.getItemBorrowStatus(box.epc));
@@ -379,14 +379,14 @@ public class ItemDetailFragment extends KeyDwonFragment {
 
     private void fillContentInfo(ContentInfo content, BoxInfo parentBox) {
         tvTitle.setText(content.toString());
-        tvEpc.setText("TID: " + na(content.epc));
-        tvShortId.setText("简称: " + na(content.shortId));
-        tvDesc.setText("描述: " + na(content.description));
-        tvType.setText("类型: 内容物 (CONTENT)");
+        tvEpc.setText(getString(R.string.detail_tid, na(content.epc)));
+        tvShortId.setText(getString(R.string.detail_short_id, na(content.shortId)));
+        tvDesc.setText(getString(R.string.detail_desc, na(content.description)));
+        tvType.setText(getString(R.string.detail_type_content_full));
 
         llBoxInfo.setVisibility(View.VISIBLE);
-        tvBoxName.setText("箱子: " + parentBox.toString());
-        tvBoxEpc.setText("箱子 TID: " + parentBox.epc);
+        tvBoxName.setText(getString(R.string.detail_box_name, parentBox.toString()));
+        tvBoxEpc.setText(getString(R.string.detail_box_tid, parentBox.epc));
 
         setBorrowStatusText(dbHelper.getItemBorrowStatus(content.epc));
         setCreatedAt(content.createdAt);
@@ -412,10 +412,10 @@ public class ItemDetailFragment extends KeyDwonFragment {
 
     private void fillStandaloneInfo(StockInInfo si) {
         tvTitle.setText(si.toString());
-        tvEpc.setText("TID: " + na(si.epc));
-        tvShortId.setText("简称: " + na(si.shortId));
-        tvDesc.setText("描述: " + na(si.description));
-        tvType.setText("类型: 独立物件 (STANDALONE)");
+        tvEpc.setText(getString(R.string.detail_tid, na(si.epc)));
+        tvShortId.setText(getString(R.string.detail_short_id, na(si.shortId)));
+        tvDesc.setText(getString(R.string.detail_desc, na(si.description)));
+        tvType.setText(getString(R.string.detail_type_standalone_full));
         llBoxInfo.setVisibility(View.GONE);
 
         setBorrowStatusText(dbHelper.getItemBorrowStatus(si.epc));
@@ -436,11 +436,11 @@ public class ItemDetailFragment extends KeyDwonFragment {
     }
 
     private void fillFallbackInfo() {
-        tvTitle.setText("物品详情");
-        tvEpc.setText("TID: " + itemEpc);
-        tvShortId.setText("简称: N/A");
-        tvDesc.setText("描述: N/A");
-        tvType.setText("类型: 未知");
+        tvTitle.setText(getString(R.string.detail_item_detail));
+        tvEpc.setText(getString(R.string.detail_tid, itemEpc));
+        tvShortId.setText(R.string.detail_short_id_na);
+        tvDesc.setText(R.string.detail_desc_na);
+        tvType.setText(R.string.detail_type_unknown);
         llBoxInfo.setVisibility(View.GONE);
 
         setBorrowStatusText(dbHelper.getItemBorrowStatus(itemEpc));
@@ -459,10 +459,10 @@ public class ItemDetailFragment extends KeyDwonFragment {
             fillStockInFields(si);
         } else {
             flPhotoContainer.setVisibility(View.GONE);
-            tvCategory.setText("种类: N/A");
-            tvItemNumber.setText("货号: N/A");
-            tvShelf.setText("货架: N/A");
-            tvRoom.setText("房间: N/A");
+            tvCategory.setText(R.string.detail_category_na);
+            tvItemNumber.setText(R.string.detail_item_number_na);
+            tvShelf.setText(R.string.detail_shelf_na);
+            tvRoom.setText(R.string.detail_room_na);
         }
         updateEditButtonVisibility();
         loadHistory(itemEpc);
@@ -473,15 +473,15 @@ public class ItemDetailFragment extends KeyDwonFragment {
      */
     private void fillStockInFields(StockInInfo si) {
         if (si != null) {
-            tvCategory.setText("种类: " + na(si.category));
-            tvItemNumber.setText("货号: " + na(si.itemNumber));
-            tvShelf.setText("货架: " + na(si.shelf));
-            tvRoom.setText("房间: " + na(si.room));
+            tvCategory.setText(getString(R.string.detail_category, na(si.category)));
+            tvItemNumber.setText(getString(R.string.detail_item_number, na(si.itemNumber)));
+            tvShelf.setText(getString(R.string.detail_shelf, na(si.shelf)));
+            tvRoom.setText(getString(R.string.detail_room, na(si.room)));
         } else {
-            tvCategory.setText("种类: N/A");
-            tvItemNumber.setText("货号: N/A");
-            tvShelf.setText("货架: N/A");
-            tvRoom.setText("房间: N/A");
+            tvCategory.setText(R.string.detail_category_na);
+            tvItemNumber.setText(R.string.detail_item_number_na);
+            tvShelf.setText(R.string.detail_shelf_na);
+            tvRoom.setText(R.string.detail_room_na);
         }
     }
 
@@ -628,7 +628,7 @@ public class ItemDetailFragment extends KeyDwonFragment {
         layout.setGravity(Gravity.CENTER);
 
         TextView tvHint = new TextView(mContext);
-        tvHint.setText("点击任意位置关闭");
+        tvHint.setText(R.string.detail_click_to_close);
         tvHint.setTextColor(0xAAFFFFFF);
         tvHint.setTextSize(13);
         tvHint.setGravity(Gravity.CENTER);
@@ -660,10 +660,10 @@ public class ItemDetailFragment extends KeyDwonFragment {
 
     private void setBorrowStatusText(String status) {
         if ("BORROWED".equals(status)) {
-            tvBorrowStatus.setText("借还状态: 已借出");
+            tvBorrowStatus.setText(R.string.detail_status_borrowed);
             tvBorrowStatus.setTextColor(0xFFFF5722);
         } else {
-            tvBorrowStatus.setText("借还状态: 在库");
+            tvBorrowStatus.setText(R.string.detail_status_in_stock);
             tvBorrowStatus.setTextColor(0xFF4CAF50);
         }
     }
@@ -673,12 +673,12 @@ public class ItemDetailFragment extends KeyDwonFragment {
             try {
                 long ts = Long.parseLong(timestamp);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-                tvCreatedAt.setText("入库时间: " + sdf.format(new java.util.Date(ts)));
+                tvCreatedAt.setText(getString(R.string.detail_stockin_time, sdf.format(new java.util.Date(ts))));
             } catch (Exception e) {
-                tvCreatedAt.setText("入库时间: " + timestamp);
+                tvCreatedAt.setText(getString(R.string.detail_stockin_time, timestamp));
             }
         } else {
-            tvCreatedAt.setText("入库时间: N/A");
+            tvCreatedAt.setText(R.string.detail_stockin_time_na);
         }
     }
 
@@ -717,12 +717,12 @@ public class ItemDetailFragment extends KeyDwonFragment {
                 if (record instanceof StockInInfo) {
                     StockInInfo si = (StockInInfo) record;
                     tvName.setText(si.toString());
-                    tvEpc.setText("TID: " + si.epc);
+                    tvEpc.setText(getString(R.string.detail_tid, si.epc));
                     String typeLabel;
                     switch (si.type) {
-                        case "BOX": typeLabel = "入库(箱子)"; break;
-                        case "CONTENT": typeLabel = "入库(内容物)"; break;
-                        default: typeLabel = "入库(独立)"; break;
+                        case "BOX": typeLabel = getString(R.string.detail_history_si_box); break;
+                        case "CONTENT": typeLabel = getString(R.string.detail_history_si_content); break;
+                        default: typeLabel = getString(R.string.detail_history_si_standalone); break;
                     }
                     tvType.setText(typeLabel);
                     tvType.setTextColor(0xFF4CAF50);
@@ -730,7 +730,7 @@ public class ItemDetailFragment extends KeyDwonFragment {
                     catch (Exception e) { tvTime.setText(si.timestamp); }
                 } else if (record instanceof CheckoutLogInfo) {
                     CheckoutLogInfo cl = (CheckoutLogInfo) record;
-                    String action = "BORROW".equals(cl.status) ? "借出" : "归还";
+                    String action = "BORROW".equals(cl.status) ? getString(R.string.detail_history_borrow) : getString(R.string.detail_history_return);
                     tvName.setText(cl.studentId + " - " + action);
                     tvEpc.setText(cl.boxShortId != null ? cl.boxShortId : "");
                     tvType.setText(action);
@@ -993,7 +993,7 @@ public class ItemDetailFragment extends KeyDwonFragment {
                 loadPhotos(new ArrayList<>(photoPaths));
                 updateDeleteButtonVisibility();
                 pendingPhotoPath = null;
-                Toast.makeText(mContext, "照片已保存", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, R.string.detail_photo_saved, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -1004,7 +1004,7 @@ public class ItemDetailFragment extends KeyDwonFragment {
     private void startLocated() {
         if (inventoryFlag) return;
         if (itemEpc.isEmpty()) {
-            Toast.makeText(mContext, "TID 为空，无法定位", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, R.string.detail_tid_empty, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -1032,7 +1032,7 @@ public class ItemDetailFragment extends KeyDwonFragment {
         });
 
         if (!result) {
-            Toast.makeText(mContext, "启动雷达定位失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, R.string.detail_radar_start_fail, Toast.LENGTH_SHORT).show();
             return;
         }
 

@@ -679,9 +679,9 @@ public class StockInFragment extends KeyDwonFragment {
         // Borrow status badge
         String borrowStatus = dbHelper.getItemBorrowStatus(record.epc);
         if ("BORROWED".equals(borrowStatus)) {
-            tvBorrow.setText("已借出"); tvBorrow.setTextColor(0xFFFF5722);
+            tvBorrow.setText(R.string.warehouse_item_borrowed); tvBorrow.setTextColor(0xFFFF5722);
         } else {
-            tvBorrow.setText("在库"); tvBorrow.setTextColor(0xFF4CAF50);
+            tvBorrow.setText(R.string.warehouse_item_in_stock); tvBorrow.setTextColor(0xFF4CAF50);
         }
 
         // Info line: TID + type label + optional child count for BOX
@@ -859,9 +859,9 @@ public class StockInFragment extends KeyDwonFragment {
 
         // Borrow status badge
         if ("BORROWED".equals(item.borrowStatus)) {
-            tvBorrow.setText("已借出"); tvBorrow.setTextColor(0xFFFF5722);
+            tvBorrow.setText(R.string.warehouse_item_borrowed); tvBorrow.setTextColor(0xFFFF5722);
         } else {
-            tvBorrow.setText("在库"); tvBorrow.setTextColor(0xFF4CAF50);
+            tvBorrow.setText(R.string.warehouse_item_in_stock); tvBorrow.setTextColor(0xFF4CAF50);
         }
 
         // Info line
@@ -892,9 +892,9 @@ public class StockInFragment extends KeyDwonFragment {
         tvEpc.setText(truncateEpc(item.epc));
 
         if ("BORROWED".equals(item.borrowStatus)) {
-            tvBorrow.setText("借出"); tvBorrow.setTextColor(0xFFFF5722);
+            tvBorrow.setText(R.string.warehouse_item_borrowed); tvBorrow.setTextColor(0xFFFF5722);
         } else {
-            tvBorrow.setText("在库"); tvBorrow.setTextColor(0xFF4CAF50);
+            tvBorrow.setText(R.string.warehouse_item_in_stock); tvBorrow.setTextColor(0xFF4CAF50);
         }
 
         btnDelete.setOnClickListener(v -> confirmDeleteGroupingItem(item));

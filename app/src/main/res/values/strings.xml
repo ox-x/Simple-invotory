@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">简库</string>
+    <string name="app_name">Sample Inventory</string>
     <string name="dashboard_title">UHF RFID Tools</string>
     <string name="dashboard_subtitle">Select a function to continue</string>
     <string name="action_settings">Settings</string>
@@ -177,7 +177,7 @@
     <string name="tvOption_Read">Read Mode：</string>
     <string name="ckLoop_Read">Auto</string>
     <string name="ckAnti_Read">Anti</string>
-    <string name="ckSecond">2级参数设置</string>
+    <string name="ckSecond">Level 2 Settings</string>
     <string name="tvBank2_Read">Block：</string>
     <string name="tvPtr2_Read">Ptr：</string>
     <string name="tvLen2_Read">Len：</string>
@@ -262,7 +262,7 @@
 
 
     <!-- chooseuii -->
-    <string name="tvChooseInfo">请选择UII的去向</string>
+    <string name="tvChooseInfo">Select UII Operation</string>
     <string name="rbRead">Read Data</string>
     <string name="rbWrite">Write Data</string>
     <string name="rbErase">Erase Data</string>
@@ -604,9 +604,9 @@
         <item>8</item>
     </string-array>
     <string-array name="arrayHop">
-        <item>随机跳频</item>
-        <item>从高往低顺序跳频</item>
-        <item>从低往高顺序跳频</item>
+        <item>Random</item>
+        <item>Descending</item>
+        <item>Ascending</item>
     </string-array>
     <string-array name="arrayVoltage">
         <item>5V</item>
@@ -1601,7 +1601,7 @@ r</string>
     <string name="stockin_type_content">Add to Box</string>
     <string name="stockin_register_as_box">Register as Box</string>
     <string name="stockin_register_as_content">Add to Box</string>
-    <string name="stockin_register_standalone">Register Standalone</string>
+    <string name="stockin_register_standalone">Standalone</string>
     <string name="stockin_category">Category</string>
     <string name="stockin_category_hint">e.g. Electronics, Furniture</string>
     <string name="stockin_item_number">Item Number</string>
@@ -1710,7 +1710,7 @@ r</string>
     <string name="wh_grid_photo">Item photo</string>
 
     <!-- Borrow/Return (借还) -->
-    <string name="tab_borrow_return">Borrow/Return</string>
+    <string name="tab_borrow_return">Borrow Return</string>
     <string name="borrow_mode">Borrow</string>
     <string name="return_mode">Return</string>
     <string name="mode_borrow">BORROW</string>
@@ -1747,10 +1747,133 @@ r</string>
     <string name="br_scan_status_scanning">Scanning...</string>
     <string name="br_items_summary">%1$d/%2$d audited</string>
 
+    <!-- Emulator TID Input -->
+    <string name="br_emulator_tid_title">Simulator: Input TID</string>
+    <string name="br_emulator_tid_hint">Enter TID value to simulate scan</string>
+    <string name="br_emulator_already_audited">Already audited</string>
+    <string name="br_emulator_no_match">No matching item for TID: %s</string>
+
     <!-- Dashboard -->
     <string name="tab_advanced">Advanced</string>
 
     <!-- Warehouse -->
     <string name="warehouse_delete_contentconfirm">Delete this item?</string>
+
+    <!-- ======================== Detail Page ======================== -->
+    <string name="detail_back">← Back</string>
+    <string name="detail_section_basic">Basic Info</string>
+    <string name="detail_section_box">Belonging Box</string>
+    <string name="detail_section_status">Status</string>
+    <string name="detail_section_radar">Radar Location</string>
+    <string name="detail_section_history">History</string>
+    <string name="detail_no_history">No history records</string>
+    <string name="detail_start_locate">Start</string>
+    <string name="detail_stop_locate">Stop</string>
+    <string name="detail_click_to_close">Tap anywhere to close</string>
+    <string name="detail_add_photo_desc">Add photo</string>
+    <string name="detail_delete_photo_desc">Delete photo</string>
+    <string name="detail_tid">TID: %s</string>
+    <string name="detail_short_id">Short ID: %s</string>
+    <string name="detail_short_id_na">Short ID: N/A</string>
+    <string name="detail_desc">Description: %s</string>
+    <string name="detail_desc_na">Description: N/A</string>
+    <string name="detail_type_box_full">Type: Box (BOX)</string>
+    <string name="detail_type_content_full">Type: Content (CONTENT)</string>
+    <string name="detail_type_standalone_full">Type: Standalone (STANDALONE)</string>
+    <string name="detail_type_unknown">Type: Unknown</string>
+    <string name="detail_item_detail">Item Detail</string>
+    <string name="detail_box_name">Box: %s</string>
+    <string name="detail_box_tid">Box TID: %s</string>
+    <string name="detail_category">Category: %s</string>
+    <string name="detail_category_na">Category: N/A</string>
+    <string name="detail_item_number">Item #: %s</string>
+    <string name="detail_item_number_na">Item #: N/A</string>
+    <string name="detail_shelf">Shelf: %s</string>
+    <string name="detail_shelf_na">Shelf: N/A</string>
+    <string name="detail_room">Room: %s</string>
+    <string name="detail_room_na">Room: N/A</string>
+    <string name="detail_status_borrowed">Borrow/Return: Borrowed</string>
+    <string name="detail_status_in_stock">Borrow/Return: In Stock</string>
+    <string name="detail_stockin_time">Stock-In: %s</string>
+    <string name="detail_stockin_time_na">Stock-In: N/A</string>
+    <string name="detail_history_si_box">Stock-In (Box)</string>
+    <string name="detail_history_si_content">Stock-In (Content)</string>
+    <string name="detail_history_si_standalone">Stock-In (Standalone)</string>
+    <string name="detail_history_borrow">Borrow</string>
+    <string name="detail_history_return">Return</string>
+    <string name="detail_photo_saved">Photo saved</string>
+    <string name="detail_tid_empty">TID is empty, cannot locate</string>
+    <string name="detail_radar_start_fail">Failed to start radar location</string>
+
+    <!-- ======================== Borrow/Return Buttons ======================== -->
+    <string name="checkout_audited">✓ Audited</string>
+    <string name="checkout_not_audited">✗ Not Audited</string>
+    <string name="checkout_btn_borrow">B</string>
+    <string name="checkout_btn_return">R</string>
+    <string name="checkout_student_hint">Enter Student ID</string>
+    <string name="checkout_pending_borrow">Borrow: %d</string>
+    <string name="checkout_pending_return">Return: %d</string>
+
+    <!-- ======================== Export ======================== -->
+    <string name="checkout_excel_name">Item Name</string>
+    <string name="checkout_excel_tid">TID</string>
+    <string name="checkout_excel_type">Type</string>
+    <string name="checkout_excel_box">Belonging Box</string>
+    <string name="checkout_excel_action">Action</string>
+    <string name="checkout_excel_type_box">Box</string>
+    <string name="checkout_excel_type_content">Content</string>
+    <string name="checkout_excel_type_standalone">Standalone</string>
+    <string name="warehouse_excel_item_name">Item Name</string>
+    <string name="warehouse_excel_tid">TID</string>
+    <string name="warehouse_excel_type">Type</string>
+    <string name="warehouse_excel_parent_box">Belonging Box</string>
+    <string name="warehouse_excel_cur_status">Status</string>
+    <string name="warehouse_excel_last_time">Last Borrow/Return</string>
+    <string name="warehouse_excel_last_person">Last Borrower</string>
+    <string name="warehouse_excel_type_box">Box</string>
+    <string name="warehouse_excel_type_content">Content</string>
+    <string name="warehouse_excel_type_standalone">Standalone</string>
+    <string name="warehouse_item_borrowed">Borrowed</string>
+    <string name="warehouse_item_in_stock">In Stock</string>
+
+    <!-- ======================== Password System ======================== -->
+    <string name="password_title_admin_verify">Admin Verification</string>
+    <string name="password_message_enter">Enter admin password to access %s</string>
+    <string name="password_hint">Enter password</string>
+    <string name="password_wrong">Incorrect password</string>
+    <string name="password_reset_title">Reset Password</string>
+    <string name="password_reset_message">Reset password to default?</string>
+    <string name="password_reset_done">Password reset to default</string>
+    <string name="password_forgot_reset">Forgot? Reset</string>
+
+    <!-- ======================== Advanced Menu ======================== -->
+    <string name="advanced_scan">Scan</string>
+    <string name="advanced_radar">Radar</string>
+    <string name="advanced_location">Location</string>
+    <string name="advanced_settings">Settings</string>
+    <string name="advanced_read_write">Read/Write</string>
+    <string name="advanced_light">Light</string>
+    <string name="advanced_lock">Lock</string>
+    <string name="advanced_kill">Kill</string>
+    <string name="advanced_block_write">Block Write</string>
+    <string name="advanced_permalock">Permalock</string>
+    <string name="advanced_upgrade">Upgrade</string>
+    <string name="advanced_clear_database">Clear Database</string>
+    <string name="advanced_change_password">Change Password</string>
+
+    <!-- Clear Database Dialog -->
+    <string name="advanced_clear_db_title">Clear Database</string>
+    <string name="advanced_clear_db_message">Clear all database data? This action cannot be undone.</string>
+    <string name="advanced_db_cleared">Database cleared</string>
+
+    <!-- Change Password Dialog -->
+    <string name="advanced_change_pwd_title">Change Admin Password</string>
+    <string name="advanced_old_pwd_hint">Enter old password</string>
+    <string name="advanced_new_pwd_hint">Enter new password</string>
+    <string name="advanced_confirm_pwd_hint">Re-enter new password</string>
+    <string name="advanced_pwd_old_wrong">Incorrect old password</string>
+    <string name="advanced_pwd_empty">New password cannot be empty</string>
+    <string name="advanced_pwd_mismatch">Passwords do not match</string>
+    <string name="advanced_pwd_changed">Password changed</string>
 
 </resources>

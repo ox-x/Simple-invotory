@@ -24,7 +24,7 @@
             android:background="@drawable/bg_btn_topbar"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="← 返回"
+            android:text="@string/detail_back"
             android:textColor="@color/white"
             android:textSize="13sp" />
 
@@ -106,7 +106,7 @@
                     android:src="@android:drawable/ic_menu_camera"
                     android:scaleType="center"
                     android:visibility="gone"
-                    android:contentDescription="添加照片" />
+                    android:contentDescription="@string/detail_add_photo_desc" />
 
                 <!-- Delete Current Photo Button (visible in edit mode) -->
                 <ImageButton
@@ -119,7 +119,7 @@
                     android:src="@android:drawable/ic_menu_close_clear_cancel"
                     android:scaleType="center"
                     android:visibility="gone"
-                    android:contentDescription="删除照片" />
+                    android:contentDescription="@string/detail_delete_photo_desc" />
             </FrameLayout>
 
             <!-- Basic Info Card -->
@@ -134,7 +134,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="基本信息"
+                    android:text="@string/detail_section_basic"
                     android:textColor="@color/detail_primary"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -434,7 +434,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="所属箱子"
+                    android:text="@string/detail_section_box"
                     android:textColor="@color/detail_primary"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -468,7 +468,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="状态信息"
+                    android:text="@string/detail_section_status"
                     android:textColor="@color/detail_primary"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -502,7 +502,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="雷达定位"
+                    android:text="@string/detail_section_radar"
                     android:textColor="@color/detail_primary"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -559,7 +559,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@drawable/bg_btn_detail_primary"
-                        android:text="开始定位"
+                        android:text="@string/detail_start_locate"
                         android:textColor="@color/white"
                         android:textSize="13sp" />
 
@@ -570,7 +570,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_weight="1"
                         android:background="@drawable/bg_btn_detail_primary"
-                        android:text="停止定位"
+                        android:text="@string/detail_stop_locate"
                         android:textColor="@color/white"
                         android:textSize="13sp" />
                 </LinearLayout>
@@ -598,7 +598,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="历史记录"
+                        android:text="@string/detail_section_history"
                         android:textColor="@color/detail_primary"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -617,7 +617,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="16dp"
-                    android:text="暂无历史记录"
+                    android:text="@string/detail_no_history"
                     android:textColor="#999999"
                     android:textSize="12sp"
                     android:visibility="gone" />

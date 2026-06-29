@@ -6,6 +6,8 @@ import android.os.Build;
  * 模拟器/虚拟设备检测工具类。
  * 用于检测当前是否运行在Android模拟器环境中，以便自动切换为模拟模式，
  * 避免因RFID硬件API不存在而导致应用崩溃。
+ *
+ * 检测策略包含多层：Build特征、设备属性、运行时环境特征。
  */
 public class EmulatorDetector {
 
@@ -35,13 +37,23 @@ public class EmulatorDetector {
             return true;
         }
 
+        // 方法3: 检查附加特征 (设备名、主板、序列号等)
+        if (checkAdditionalProperties()) {
+            return true;
+        }
+
         return false;
     }
 
+    /**
+     * 检查常见的模拟器 Build 属性特征。
+     */
     private static boolean checkBuildProperties() {
         String fingerprint = Build.FINGERPRINT;
         if (fingerprint != null) {
-            if (fingerprint.contains("generic") || fingerprint.contains("emu")) {
+            if (fingerprint.contains("generic")
+                    || fingerprint.contains("emu")
+                    || fingerprint.contains("test-keys")) {
                 return true;
             }
         }
@@ -54,7 +66,9 @@ public class EmulatorDetector {
                     || model.contains("sdk_gphone")
                     || model.contains("sdk_phone")
                     || model.contains("emu64")
-                    || model.contains("emu32")) {
+                    || model.contains("emu32")
+                    || model.equals("Android SDK built for arm64")
+                    || model.contains("AOSP on")) {
                 return true;
             }
         }
@@ -78,7 +92,8 @@ public class EmulatorDetector {
             if (product.contains("sdk")
                     || product.contains("emu")
                     || product.contains("vbox")
-                    || product.contains("generic")) {
+                    || product.contains("generic")
+                    || product.contains("aosp")) {
                 return true;
             }
         }
@@ -87,7 +102,8 @@ public class EmulatorDetector {
         if (hardware != null) {
             if (hardware.contains("goldfish")
                     || hardware.contains("ranchu")
-                    || hardware.contains("vbox")) {
+                    || hardware.contains("vbox")
+                    || hardware.contains("qemu")) {
                 return true;
             }
         }
@@ -95,10 +111,51 @@ public class EmulatorDetector {
         return false;
     }
 
+    /**
+     * 检查设备特定的模拟器特征（无线电、文件系统等）。
+     */
     private static boolean checkDeviceSpecific() {
         // Android模拟器通常有特定的无线电固件版本
         String radioVersion = getRadioVersion();
         if (radioVersion != null && radioVersion.contains("Unknown")) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 检查附加的 Build 属性特征。
+     */
+    private static boolean checkAdditionalProperties() {
+        String device = Build.DEVICE;
+        if (device != null) {
+            if (device.contains("generic")
+                    || device.contains("emu64")
+                    || device.contains("emu32")
+                    || device.contains("vsoc")
+                    || device.contains("hikey")) {
+                return true;
+            }
+        }
+
+        String board = Build.BOARD;
+        if (board != null && (board.contains("unknown")
+                || board.contains("goldfish")
+                || board.contains("ranchu"))) {
+            return true;
+        }
+
+        String bootloader = Build.BOOTLOADER;
+        if (bootloader != null && (bootloader.contains("unknown")
+                || bootloader.equals("qemu"))) {
+            return true;
+        }
+
+        String host = Build.HOST;
+        if (host != null && (host.contains("android-")
+                || host.contains("qemu")
+                || host.contains("build"))) {
             return true;
         }
 

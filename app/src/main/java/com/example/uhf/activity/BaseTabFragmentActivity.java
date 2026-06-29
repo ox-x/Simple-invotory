@@ -84,7 +84,11 @@ public class BaseTabFragmentActivity extends FragmentActivity {
         } catch (Throwable ex) {
             // 捕获所有异常/错误（包括 UnsatisfiedLinkError 等）
             Log.e(TAG, "RFID init failed: " + ex.getMessage(), ex);
-            toastMessage("RFID初始化失败: " + ex.getMessage());
+            // RFID硬件初始化失败时也自动进入模拟器模式，
+            // 确保所有模拟器（包括未被 EmulatorDetector 覆盖的）都能正常使用
+            isEmulatorMode = true;
+            toastMessage("RFID硬件不可用，已切换为模拟模式");
+            Log.i(TAG, "Fallback to emulator mode - RFID hardware init failed");
             return;
         }
 

@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,11 @@ public class CheckoutFragment extends KeyDwonFragment {
     private TextView tvScanStatus, tvSummary;
     private boolean isScanning = false;
 
+    // Emulator TID Input
+    private LinearLayout llEmulatorTidInput;
+    private EditText etEmulatorTid;
+    private Button btnEmulatorTidConfirm;
+
     // Power control
     private SeekBar seekBarPower;
     private TextView tvPower;
@@ -102,12 +108,27 @@ public class CheckoutFragment extends KeyDwonFragment {
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // 尽早绑定视图引用，但在 onActivityCreated 之后才确定 mContext
+        bindViews(view);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mContext = (UHFMainActivity) getActivity();
         mContext.currentFragment = this;
         dbHelper = DatabaseHelper.getInstance(mContext);
-        initViews();
+
+        // 初始化按钮监听器（仅在第一次创建时注册）
+        initButtonListeners();
+        // 功率控制
+        initPowerSeekBar();
+        // 适配器
+        adapter = new ItemsAdapter();
+        elvItems.setAdapter(adapter);
+
         if (!isDataLoaded) {
             loadData();
             isDataLoaded = true;
@@ -115,18 +136,43 @@ public class CheckoutFragment extends KeyDwonFragment {
             // Restore visual state after view recreation on back from detail page
             restoreCheckoutState();
         }
+
+        // 使用 post() 确保在视图状态恢复（onViewStateRestored）之后设置可见性
+        final View tidInput = llEmulatorTidInput;
+        if (tidInput != null) {
+            tidInput.post(() -> {
+                boolean isEmulator = mContext != null && mContext.isEmulatorMode;
+                Log.i(TAG, "Emulator TID visibility (post): isEmulator=" + isEmulator
+                        + ", tidInput=" + tidInput);
+                tidInput.setVisibility(isEmulator ? View.VISIBLE : View.GONE);
+                if (isEmulator) {
+                    tidInput.requestLayout();
+                }
+            });
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
         // Refresh current power level only, do NOT reload data to preserve state
-        RFIDWithUHFUART reader = mContext.getReader();
-        int power = reader != null ? reader.getPower() : -1;
-        if (power > 0 && power <= 30) {
-            seekBarPower.setProgress(power - 1);
-            tvPower.setText(getString(R.string.power_label, power));
+        if (mContext != null) {
+            RFIDWithUHFUART reader = mContext.getReader();
+            int power = reader != null ? reader.getPower() : -1;
+            if (power > 0 && power <= 30) {
+                seekBarPower.setProgress(power - 1);
+                tvPower.setText(getString(R.string.power_label, power));
+            }
         }
+        // Ensure emulator TID input visibility is correct after any lifecycle changes
+        updateEmulatorTidVisibility();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // onStart 中再次确保可见性，因为 onResume 可能在某些设备上不总是触发
+        updateEmulatorTidVisibility();
     }
 
     /**
@@ -163,14 +209,19 @@ public class CheckoutFragment extends KeyDwonFragment {
         });
     }
 
-    private void initViews() {
-        View v = getView();
+    /**
+     * 绑定所有视图引用（在 onCreateView 之后立即调用，与 mContext 无关）。
+     */
+    private void bindViews(View v) {
         etStudentId = v.findViewById(R.id.etStudentId);
         btnConfirmStudent = v.findViewById(R.id.btnConfirmStudent);
         tvStudentStatus = v.findViewById(R.id.tvStudentStatus);
         btnContinuousScan = v.findViewById(R.id.btnContinuousScan);
         btnStopScan = v.findViewById(R.id.btnStopScan);
         tvScanStatus = v.findViewById(R.id.tvScanStatus);
+        llEmulatorTidInput = v.findViewById(R.id.llEmulatorTidInput);
+        etEmulatorTid = v.findViewById(R.id.etEmulatorTid);
+        btnEmulatorTidConfirm = v.findViewById(R.id.btnEmulatorTidConfirm);
         tvSummary = v.findViewById(R.id.tvSummary);
         btnFilterAll = v.findViewById(R.id.btnFilterAll);
         btnFilterInStock = v.findViewById(R.id.btnFilterInStock);
@@ -184,15 +235,14 @@ public class CheckoutFragment extends KeyDwonFragment {
         btnConfirmAction = v.findViewById(R.id.btnConfirmAction);
         btnCancelAction = v.findViewById(R.id.btnCancelAction);
         elvItems = v.findViewById(R.id.elvItems);
-
-        // Power SeekBar
         seekBarPower = v.findViewById(R.id.seekBarCheckoutPower);
         tvPower = v.findViewById(R.id.tvCheckoutPower);
-        initPowerSeekBar();
+    }
 
-        adapter = new ItemsAdapter();
-        elvItems.setAdapter(adapter);
-
+    /**
+     * 初始化按钮监听器（与 mContext 无关，可在视图创建后立即注册）。
+     */
+    private void initButtonListeners() {
         btnConfirmStudent.setOnClickListener(view -> confirmStudent());
         btnContinuousScan.setOnClickListener(view -> startContinuousScan());
         btnStopScan.setOnClickListener(view -> stopContinuousScan());
@@ -205,6 +255,24 @@ public class CheckoutFragment extends KeyDwonFragment {
         btnFilterNotAudited.setOnClickListener(view -> setFilter(FILTER_NOT_AUDITED));
         btnConfirmAction.setOnClickListener(view -> confirmPending());
         btnCancelAction.setOnClickListener(view -> cancelPending());
+
+        // Setup emulator TID input button click (listener persists across visibility changes)
+        btnEmulatorTidConfirm.setOnClickListener(view -> {
+            String tid = etEmulatorTid.getText().toString().trim();
+            if (!TextUtils.isEmpty(tid)) {
+                matchAndAudit(tid);
+                tvScanStatus.setText(getString(R.string.checkout_tag_scanned, tid));
+                tvScanStatus.setTextColor(0xFF00AA00);
+                etEmulatorTid.setText("");
+                // Reset status text after 3 seconds
+                tvScanStatus.postDelayed(() -> {
+                    if (!isScanning) {
+                        tvScanStatus.setText(R.string.br_scan_status_ready);
+                        tvScanStatus.setTextColor(0xFF666666);
+                    }
+                }, 3000);
+            }
+        });
     }
 
     // ==================== Data Loading ====================
@@ -319,31 +387,58 @@ public class CheckoutFragment extends KeyDwonFragment {
 
     private void matchAndAudit(String epc) {
         boolean matched = false;
+        boolean alreadyAudited = false;
+
+        // 查找匹配的组物品（箱子/独立物品）
         for (DisplayItem group : allGroups) {
-            if (group.epc.equalsIgnoreCase(epc) && !group.audited) {
-                group.audited = true; matched = true; mContext.playSound(1);
-                if (group.type == DisplayItem.TYPE_BOX) updateBoxAuditCount(group.epc);
+            if (group.epc.equalsIgnoreCase(epc)) {
+                if (!group.audited) {
+                    group.audited = true; matched = true; mContext.playSound(1);
+                    if (group.type == DisplayItem.TYPE_BOX) updateBoxAuditCount(group.epc);
+                } else {
+                    alreadyAudited = true;
+                }
                 break;
             }
         }
+
+        // 未匹配组，查找匹配的子物品
         if (!matched) {
             for (Map.Entry<String, List<DisplayItem>> entry : allChildren.entrySet()) {
+                boolean found = false;
                 for (DisplayItem child : entry.getValue()) {
-                    if (child.epc.equalsIgnoreCase(epc) && !child.audited) {
-                        child.audited = true; matched = true; mContext.playSound(1);
-                        updateBoxAuditCount(entry.getKey()); break;
+                    if (child.epc.equalsIgnoreCase(epc)) {
+                        if (!child.audited) {
+                            child.audited = true; matched = true; mContext.playSound(1);
+                            updateBoxAuditCount(entry.getKey());
+                        } else {
+                            alreadyAudited = true;
+                        }
+                        found = true; break;
                     }
                 }
-                if (matched) break;
+                if (found) break;
             }
         }
+
+        // 反馈处理
         if (!matched) {
-            BoxInfo parentBox = dbHelper.getBoxForContent(epc);
-            if (parentBox != null) {
-                mContext.showToast(getString(R.string.content_belongs_to_box,
-                        parentBox.shortId != null && !parentBox.shortId.isEmpty() ? parentBox.shortId : parentBox.epc));
+            if (alreadyAudited) {
+                // 物品已盘点过
+                mContext.showToast(getString(R.string.br_emulator_already_audited));
+            } else {
+                // 检查是否属于某个箱子（数据库查询）
+                BoxInfo parentBox = dbHelper.getBoxForContent(epc);
+                if (parentBox != null) {
+                    mContext.showToast(getString(R.string.content_belongs_to_box,
+                            parentBox.shortId != null && !parentBox.shortId.isEmpty() ? parentBox.shortId : parentBox.epc));
+                } else {
+                    // 完全无匹配
+                    mContext.showToast(getString(R.string.br_emulator_no_match, epc));
+                }
             }
         }
+
         applyFilter();
     }
 
@@ -371,6 +466,25 @@ public class CheckoutFragment extends KeyDwonFragment {
         applyFilter();
         // Restore confirm bar visibility and content
         updatePendingBar();
+        // Restore emulator TID input visibility
+        updateEmulatorTidVisibility();
+    }
+
+    /**
+     * Update the emulator TID input row visibility based on current mode.
+     * Visible only when running in emulator mode (isEmulatorMode == true).
+     */
+    private void updateEmulatorTidVisibility() {
+        boolean isEmulator = mContext != null && mContext.isEmulatorMode;
+        Log.i(TAG, "updateEmulatorTidVisibility: isEmulator=" + isEmulator
+                + ", mContext=" + mContext
+                + ", llEmulatorTidInput=" + llEmulatorTidInput);
+        if (llEmulatorTidInput != null) {
+            llEmulatorTidInput.setVisibility(isEmulator ? View.VISIBLE : View.GONE);
+            if (isEmulator) {
+                llEmulatorTidInput.requestLayout();
+            }
+        }
     }
 
     private void setFilter(int filter) {
@@ -474,10 +588,10 @@ public class CheckoutFragment extends KeyDwonFragment {
                 else returnCount++;
             }
             StringBuilder sb = new StringBuilder();
-            if (borrowCount > 0) sb.append("借出: ").append(borrowCount);
+            if (borrowCount > 0) sb.append(getString(R.string.checkout_pending_borrow, borrowCount));
             if (returnCount > 0) {
                 if (sb.length() > 0) sb.append("  ");
-                sb.append("归还: ").append(returnCount);
+                sb.append(getString(R.string.checkout_pending_return, returnCount));
             }
             sb.append("  ").append(getString(R.string.br_filter_audited));
             tvPendingCount.setText(sb.toString());
@@ -544,7 +658,7 @@ public class CheckoutFragment extends KeyDwonFragment {
         // 重置学生ID状态，要求下次操作重新输入
         confirmedStudentId = "";
         etStudentId.setText("");
-        tvStudentStatus.setText("请输入学生ID");
+        tvStudentStatus.setText(R.string.checkout_student_hint);
         tvStudentStatus.setTextColor(0xCCFFFFFF);
     }
 
@@ -620,7 +734,7 @@ public class CheckoutFragment extends KeyDwonFragment {
         if (!dir.exists()) dir.mkdirs();
         String fileName = pathRoot + File.separator + "CheckoutLog_" + StringUtils.getTimeString() + ".xls";
         File file = new File(fileName);
-        String[] header = {"Date/Time", "Student ID", "TID", "物品名称", "物品类型", "所属箱子", "操作"};
+        String[] header = {"Date/Time", "Student ID", "TID", getString(R.string.checkout_excel_name), getString(R.string.checkout_excel_type), getString(R.string.checkout_excel_box), getString(R.string.checkout_excel_action)};
         ExcelUtils eu = new ExcelUtils();
         eu.createExcel(file, header);
         List<String[]> data = new ArrayList<>();
@@ -628,9 +742,9 @@ public class CheckoutFragment extends KeyDwonFragment {
             String dt = "";
             try { dt = StringUtils.getTimeFormat(Long.parseLong(log.timestamp)); } catch (Exception e) { dt = log.timestamp; }
             String typeLabel = "";
-            if ("BOX".equals(log.itemType)) typeLabel = "箱子";
-            else if ("STANDALONE".equals(log.itemType)) typeLabel = "独立物件";
-            else if ("CONTENT".equals(log.itemType)) typeLabel = "内容物";
+            if ("BOX".equals(log.itemType)) typeLabel = getString(R.string.checkout_excel_type_box);
+            else if ("STANDALONE".equals(log.itemType)) typeLabel = getString(R.string.checkout_excel_type_standalone);
+            else if ("CONTENT".equals(log.itemType)) typeLabel = getString(R.string.checkout_excel_type_content);
             data.add(new String[]{dt, log.studentId, log.boxEpc, log.boxShortId, typeLabel, log.parentBoxName, log.status});
         }
         eu.writeToExcel(data);
@@ -736,17 +850,17 @@ public class CheckoutFragment extends KeyDwonFragment {
             h.tvName.setText(item.name);
             h.tvInfo.setText(item.type == DisplayItem.TYPE_BOX
                     ? getString(R.string.br_items_summary, item.auditedContents, item.totalContents)
-                    : "TID: " + item.epc);
+                    : getString(R.string.detail_tid, item.epc));
 
             if (item.audited) {
-                h.tvAudit.setText("✓已盘点"); h.tvAudit.setTextColor(0xFF4CAF50);
+                h.tvAudit.setText(R.string.checkout_audited); h.tvAudit.setTextColor(0xFF4CAF50);
             } else {
-                h.tvAudit.setText("✗未盘点"); h.tvAudit.setTextColor(0xFF9E9E9E);
+                h.tvAudit.setText(R.string.checkout_not_audited); h.tvAudit.setTextColor(0xFF9E9E9E);
             }
             if ("BORROWED".equals(item.borrowStatus)) {
-                h.tvBorrow.setText("已借出"); h.tvBorrow.setTextColor(0xFFFF5722);
+                h.tvBorrow.setText(R.string.warehouse_item_borrowed); h.tvBorrow.setTextColor(0xFFFF5722);
             } else {
-                h.tvBorrow.setText("在库"); h.tvBorrow.setTextColor(0xFF4CAF50);
+                h.tvBorrow.setText(R.string.warehouse_item_in_stock); h.tvBorrow.setTextColor(0xFF4CAF50);
             }
 
             // Highlight if in pending list
@@ -764,12 +878,12 @@ public class CheckoutFragment extends KeyDwonFragment {
             if (item.audited) {
                 h.btnAction.setEnabled(true);
                 boolean willBorrow = "IN_STOCK".equals(item.borrowStatus);
-                h.btnAction.setText(willBorrow ? "借" : "还");
+                h.btnAction.setText(willBorrow ? R.string.checkout_btn_borrow : R.string.checkout_btn_return);
                 h.btnAction.setBackgroundResource(willBorrow ? R.drawable.bg_btn_action_borrow : R.drawable.bg_btn_action_return);
                 h.btnAction.setOnClickListener(v -> addSingleToPending(item));
             } else {
                 h.btnAction.setEnabled(false);
-                h.btnAction.setText("借");
+                h.btnAction.setText(R.string.checkout_btn_borrow);
                 h.btnAction.setBackgroundResource(R.drawable.bg_btn_action_disabled);
                 h.btnAction.setOnClickListener(null);
             }
@@ -779,14 +893,14 @@ public class CheckoutFragment extends KeyDwonFragment {
             h.tvName.setText(item.name);
             h.tvEpc.setText(item.epc.length() > 12 ? item.epc.substring(0, 12) + "..." : item.epc);
             if (item.audited) {
-                h.tvAudit.setText("✓已盘点"); h.tvAudit.setTextColor(0xFF4CAF50);
+                h.tvAudit.setText(R.string.checkout_audited); h.tvAudit.setTextColor(0xFF4CAF50);
             } else {
-                h.tvAudit.setText("✗未盘点"); h.tvAudit.setTextColor(0xFF9E9E9E);
+                h.tvAudit.setText(R.string.checkout_not_audited); h.tvAudit.setTextColor(0xFF9E9E9E);
             }
             if ("BORROWED".equals(item.borrowStatus)) {
-                h.tvBorrow.setText("借出"); h.tvBorrow.setTextColor(0xFFFF5722);
+                h.tvBorrow.setText(R.string.warehouse_item_borrowed); h.tvBorrow.setTextColor(0xFFFF5722);
             } else {
-                h.tvBorrow.setText("在库"); h.tvBorrow.setTextColor(0xFF4CAF50);
+                h.tvBorrow.setText(R.string.warehouse_item_in_stock); h.tvBorrow.setTextColor(0xFF4CAF50);
             }
 
             boolean isPending = pendingItems.contains(item);
@@ -799,12 +913,12 @@ public class CheckoutFragment extends KeyDwonFragment {
             if (item.audited) {
                 h.btnAction.setEnabled(true);
                 boolean willBorrow = "IN_STOCK".equals(item.borrowStatus);
-                h.btnAction.setText(willBorrow ? "借" : "还");
+                h.btnAction.setText(willBorrow ? R.string.checkout_btn_borrow : R.string.checkout_btn_return);
                 h.btnAction.setBackgroundResource(willBorrow ? R.drawable.bg_btn_action_borrow : R.drawable.bg_btn_action_return);
                 h.btnAction.setOnClickListener(v -> addSingleToPending(item));
             } else {
                 h.btnAction.setEnabled(false);
-                h.btnAction.setText("借");
+                h.btnAction.setText(R.string.checkout_btn_borrow);
                 h.btnAction.setBackgroundResource(R.drawable.bg_btn_action_disabled);
                 h.btnAction.setOnClickListener(null);
             }

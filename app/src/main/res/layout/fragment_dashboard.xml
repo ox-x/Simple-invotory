@@ -64,7 +64,8 @@
                         android:text="@string/tab_borrow_return"
                         android:textColor="@color/module_checkout"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:gravity="center" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -157,7 +158,7 @@
                         android:layout_marginTop="@dimen/sp_sm"
                         android:text="@string/tab_warehouse"
                         android:textColor="@color/module_warehouse"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

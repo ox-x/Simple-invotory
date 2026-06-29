@@ -481,7 +481,7 @@ public class WarehouseFragment extends KeyDwonFragment {
         String fileName = pathRoot + File.separator + "Warehouse_" + StringUtils.getTimeString() + ".xls";
         File file = new File(fileName);
 
-        String[] header = {"物品名称", "TID", "物品类型", "所属箱子", "当前状态", "最近一次借还时间", "最近借还人"};
+        String[] header = {getString(R.string.warehouse_excel_item_name), getString(R.string.warehouse_excel_tid), getString(R.string.warehouse_excel_type), getString(R.string.warehouse_excel_parent_box), getString(R.string.warehouse_excel_cur_status), getString(R.string.warehouse_excel_last_time), getString(R.string.warehouse_excel_last_person)};
         ExcelUtils eu = new ExcelUtils();
         eu.createExcel(file, header);
 
@@ -491,17 +491,17 @@ public class WarehouseFragment extends KeyDwonFragment {
             String parentBox = "";
             switch (item.type) {
                 case DisplayItem.TYPE_BOX:
-                    typeLabel = "箱子";
+                    typeLabel = getString(R.string.warehouse_excel_type_box);
                     break;
                 case DisplayItem.TYPE_CONTENT:
-                    typeLabel = "内容物";
+                    typeLabel = getString(R.string.warehouse_excel_type_content);
                     parentBox = item.boxName != null ? item.boxName : "";
                     break;
                 default:
-                    typeLabel = "独立物品";
+                    typeLabel = getString(R.string.warehouse_excel_type_standalone);
                     break;
             }
-            String statusLabel = "BORROWED".equals(item.borrowStatus) ? "已借出" : "在库";
+            String statusLabel = "BORROWED".equals(item.borrowStatus) ? getString(R.string.warehouse_item_borrowed) : getString(R.string.warehouse_item_in_stock);
             String lastLog = latestLogMap.getOrDefault(item.epc, "");
             String lastBorrower = latestBorrowerMap.getOrDefault(item.epc, "");
             dataRows.add(new String[]{item.name, item.epc, typeLabel, parentBox, statusLabel, lastLog, lastBorrower});
@@ -614,9 +614,9 @@ public class WarehouseFragment extends KeyDwonFragment {
         tvAudit.setVisibility(View.GONE);
 
         if ("BORROWED".equals(item.borrowStatus)) {
-            tvBorrow.setText("已借出"); tvBorrow.setTextColor(0xFFFF5722);
+            tvBorrow.setText(R.string.warehouse_item_borrowed); tvBorrow.setTextColor(0xFFFF5722);
         } else {
-            tvBorrow.setText("在库"); tvBorrow.setTextColor(0xFF4CAF50);
+            tvBorrow.setText(R.string.warehouse_item_in_stock); tvBorrow.setTextColor(0xFF4CAF50);
         }
 
         if (item.type == DisplayItem.TYPE_BOX) {
@@ -646,9 +646,9 @@ public class WarehouseFragment extends KeyDwonFragment {
         tvAudit.setVisibility(View.GONE);
 
         if ("BORROWED".equals(item.borrowStatus)) {
-            tvBorrow.setText("借出"); tvBorrow.setTextColor(0xFFFF5722);
+            tvBorrow.setText(R.string.warehouse_item_borrowed); tvBorrow.setTextColor(0xFFFF5722);
         } else {
-            tvBorrow.setText("在库"); tvBorrow.setTextColor(0xFF4CAF50);
+            tvBorrow.setText(R.string.warehouse_item_in_stock); tvBorrow.setTextColor(0xFF4CAF50);
         }
     }
 
@@ -689,10 +689,10 @@ public class WarehouseFragment extends KeyDwonFragment {
 
             // Borrow status badge
             if ("BORROWED".equals(item.borrowStatus)) {
-                holder.tvStatus.setText("已借出");
+                holder.tvStatus.setText(R.string.warehouse_item_borrowed);
                 holder.tvStatus.setTextColor(0xFFFF5722);
             } else {
-                holder.tvStatus.setText("在库");
+                holder.tvStatus.setText(R.string.warehouse_item_in_stock);
                 holder.tvStatus.setTextColor(0xFF4CAF50);
             }
 

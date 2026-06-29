@@ -1,0 +1,8 @@
+feat: 全面英文本地化及中文字符串同步
+
+- 所有界面硬编码中文改为 @string 资源引用（ItemDetail, Checkout, Warehouse, StockIn, Dashboard, Advanced 等）
+- 新增英文和中文 strings.xml 中的详情页/盘点/仓库/密码/高级菜单等字符串
+- values-zh/strings.xml 与 values/strings.xml 完全同步，所有字符均有中英文版本
+- 模拟器兼容性增强（EmulatorDetector 优化）
+- UI 布局微调（checkout, dashboard, stockin）
+- 版本号 1.4.1 → 1.5.0

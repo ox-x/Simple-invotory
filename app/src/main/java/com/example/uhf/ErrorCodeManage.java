@@ -6,25 +6,25 @@ public class ErrorCodeManage {
     public static String getMessage(int errorCode){
          switch (errorCode){
              case UhfBase.ErrorCode.ERROR_NO_TAG:
-                 return "找不到标签!";
+                 return "Tag not found!";
              case UhfBase.ErrorCode.ERROR_INSUFFICIENT_PRIVILEGES:
-                 return "没有权限访问!";
+                 return "No access permission!";
              case UhfBase.ErrorCode.ERROR_MEMORY_OVERRUN:
-                 return "数据区超限!";
+                 return "Memory overrun!";
              case UhfBase.ErrorCode.ERROR_MEMORY_LOCK:
-                 return "数据区被锁定!";
+                 return "Memory locked!";
              case UhfBase.ErrorCode.ERROR_TAG_NO_REPLY:
-                 return "标签没有应答!";
+                 return "Tag not responding!";
              case UhfBase.ErrorCode.ERROR_PASSWORD_IS_INCORRECT:
-                 return "密码不正确!";
+                 return "Incorrect password!";
              case UhfBase.ErrorCode.ERROR_RESPONSE_BUFFER_OVERFLOW:
-                 return "缓冲区溢出!";
+                 return "Buffer overflow!";
              case UhfBase.ErrorCode.ERROR_NO_ENOUGH_POWER_ON_TAG:
-                 return "标签能量不足!";
+                 return "Insufficient tag power!";
              case UhfBase.ErrorCode.ERROR_OPERATION_FAILED:
-                 return "操作失败!";
+                 return "Operation failed!";
                  default:
-                     return "失败!";
+                     return "Failed!";
 
          }
     }

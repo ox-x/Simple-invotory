@@ -51,11 +51,11 @@ public class AdvancedFragment extends KeyDwonFragment {
         gvAdvanced.setAdapter(adapter);
         gvAdvanced.setOnItemClickListener((parent, view, position, id) -> {
             DashboardFragment.MenuItem item = menuItems.get(position);
-            if (item.fragmentClass == null && "清除数据库".equals(item.label)) {
-                // "清除数据库" entry - show confirmation dialog
+            if (item.fragmentClass == null && getString(R.string.advanced_clear_database).equals(item.label)) {
+                // Clear Database entry - show confirmation dialog
                 showClearDatabaseDialog();
-            } else if (item.fragmentClass == null && "更改密码".equals(item.label)) {
-                // "更改密码" entry - show change password dialog
+            } else if (item.fragmentClass == null && getString(R.string.advanced_change_password).equals(item.label)) {
+                // Change Password entry - show change password dialog
                 showChangePasswordDialog();
             } else {
                 mContext.openFeature(item.fragmentClass, item.label);
@@ -72,32 +72,32 @@ public class AdvancedFragment extends KeyDwonFragment {
 
     private void buildMenuItems() {
         menuItems.clear();
-        menuItems.add(new DashboardFragment.MenuItem("📋", "扫描", 0xFF2196F3,
+        menuItems.add(new DashboardFragment.MenuItem("📋", getString(R.string.advanced_scan), 0xFF2196F3,
                 com.example.uhf.fragment.UHFReadTagFragment.class));
-        menuItems.add(new DashboardFragment.MenuItem("📡", "雷达", 0xFF4CAF50,
+        menuItems.add(new DashboardFragment.MenuItem("📡", getString(R.string.advanced_radar), 0xFF4CAF50,
                 com.example.uhf.fragment.UHFRadarLocationFragment.class));
-        menuItems.add(new DashboardFragment.MenuItem("📍", "定位", 0xFFFF9800,
+        menuItems.add(new DashboardFragment.MenuItem("📍", getString(R.string.advanced_location), 0xFFFF9800,
                 com.example.uhf.fragment.UHFLocationFragment.class));
-        menuItems.add(new DashboardFragment.MenuItem("⚙️", "设置", 0xFF607D8B,
+        menuItems.add(new DashboardFragment.MenuItem("⚙️", getString(R.string.advanced_settings), 0xFF607D8B,
                 com.example.uhf.fragment.UHFSetFragment.class));
-        menuItems.add(new DashboardFragment.MenuItem("✏️", "读写", 0xFF9C27B0,
+        menuItems.add(new DashboardFragment.MenuItem("✏️", getString(R.string.advanced_read_write), 0xFF9C27B0,
                 com.example.uhf.fragment.UHFReadWriteFragment.class));
-        menuItems.add(new DashboardFragment.MenuItem("💡", "点亮", 0xFFFFEB3B,
+        menuItems.add(new DashboardFragment.MenuItem("💡", getString(R.string.advanced_light), 0xFFFFEB3B,
                 com.example.uhf.fragment.UHFLightFragment.class));
-        menuItems.add(new DashboardFragment.MenuItem("🔒", "锁定", 0xFFF44336,
+        menuItems.add(new DashboardFragment.MenuItem("🔒", getString(R.string.advanced_lock), 0xFFF44336,
                 com.example.uhf.fragment.UHFLockFragment.class));
-        menuItems.add(new DashboardFragment.MenuItem("🗑️", "销毁", 0xFF795548,
+        menuItems.add(new DashboardFragment.MenuItem("🗑️", getString(R.string.advanced_kill), 0xFF795548,
                 com.example.uhf.fragment.UHFKillFragment.class));
-        menuItems.add(new DashboardFragment.MenuItem("📝", "块写", 0xFF3F51B5,
+        menuItems.add(new DashboardFragment.MenuItem("📝", getString(R.string.advanced_block_write), 0xFF3F51B5,
                 com.example.uhf.fragment.BlockWriteFragment.class));
-        menuItems.add(new DashboardFragment.MenuItem("🔐", "永久锁", 0xFF009688,
+        menuItems.add(new DashboardFragment.MenuItem("🔐", getString(R.string.advanced_permalock), 0xFF009688,
                 com.example.uhf.fragment.BlockPermalockFragment.class));
-        menuItems.add(new DashboardFragment.MenuItem("🔄", "升级", 0xFF00BCD4,
+        menuItems.add(new DashboardFragment.MenuItem("🔄", getString(R.string.advanced_upgrade), 0xFF00BCD4,
                 com.example.uhf.fragment.UHFUpgradeFragment.class));
         // Clear database (special handling)
-        menuItems.add(new DashboardFragment.MenuItem("🗄️", "清除数据库", 0xFFD32F2F, null));
+        menuItems.add(new DashboardFragment.MenuItem("🗄️", getString(R.string.advanced_clear_database), 0xFFD32F2F, null));
         // Change password (special handling)
-        menuItems.add(new DashboardFragment.MenuItem("🔑", "更改密码", 0xFF607D8B, null));
+        menuItems.add(new DashboardFragment.MenuItem("🔑", getString(R.string.advanced_change_password), 0xFF607D8B, null));
     }
 
     @Override
@@ -109,13 +109,13 @@ public class AdvancedFragment extends KeyDwonFragment {
 
     private void showClearDatabaseDialog() {
         new AlertDialog.Builder(mContext)
-                .setTitle("清除数据库")
-                .setMessage("确定要清除所有数据库数据吗？此操作不可恢复。")
-                .setPositiveButton("确定", (dialog, which) -> {
+                .setTitle(R.string.advanced_clear_db_title)
+                .setMessage(R.string.advanced_clear_db_message)
+                .setPositiveButton(R.string.ok, (dialog, which) -> {
                     DatabaseHelper.getInstance(mContext).clearAllData();
-                    Toast.makeText(mContext, "数据库已清除", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, R.string.advanced_db_cleared, Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton(R.string.button_cancel, null)
                 .show();
     }
 
@@ -128,13 +128,13 @@ public class AdvancedFragment extends KeyDwonFragment {
 
         final EditText etOldPassword = new EditText(mContext);
         etOldPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        etOldPassword.setHint("请输入旧密码");
+        etOldPassword.setHint(R.string.advanced_old_pwd_hint);
         etOldPassword.setSingleLine(true);
         wrapper.addView(etOldPassword);
 
         final EditText etNewPassword = new EditText(mContext);
         etNewPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        etNewPassword.setHint("请输入新密码");
+        etNewPassword.setHint(R.string.advanced_new_pwd_hint);
         etNewPassword.setSingleLine(true);
         LinearLayout.LayoutParams mtParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -143,7 +143,7 @@ public class AdvancedFragment extends KeyDwonFragment {
 
         final EditText etConfirmPassword = new EditText(mContext);
         etConfirmPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        etConfirmPassword.setHint("请再次输入新密码");
+        etConfirmPassword.setHint(R.string.advanced_confirm_pwd_hint);
         etConfirmPassword.setSingleLine(true);
         LinearLayout.LayoutParams mtParams2 = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -151,10 +151,10 @@ public class AdvancedFragment extends KeyDwonFragment {
         wrapper.addView(etConfirmPassword, mtParams2);
 
         AlertDialog dialog = new AlertDialog.Builder(mContext)
-                .setTitle("更改管理员密码")
+                .setTitle(R.string.advanced_change_pwd_title)
                 .setView(wrapper)
-                .setPositiveButton("确定", null)
-                .setNegativeButton("取消", (d, w) -> d.dismiss())
+                .setPositiveButton(R.string.ok, null)
+                .setNegativeButton(R.string.button_cancel, (d, w) -> d.dismiss())
                 .create();
         dialog.setCanceledOnTouchOutside(false);
 
@@ -166,22 +166,22 @@ public class AdvancedFragment extends KeyDwonFragment {
 
                 String currentPwd = DashboardFragment.getAdminPassword(mContext);
                 if (!currentPwd.equals(oldPwd)) {
-                    Toast.makeText(mContext, "旧密码错误", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, R.string.advanced_pwd_old_wrong, Toast.LENGTH_SHORT).show();
                     etOldPassword.setText("");
                     return;
                 }
                 if (newPwd.isEmpty()) {
-                    Toast.makeText(mContext, "新密码不能为空", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, R.string.advanced_pwd_empty, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (!newPwd.equals(confirmPwd)) {
-                    Toast.makeText(mContext, "两次输入的新密码不一致", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, R.string.advanced_pwd_mismatch, Toast.LENGTH_SHORT).show();
                     etConfirmPassword.setText("");
                     return;
                 }
 
                 DashboardFragment.setAdminPassword(mContext, newPwd);
-                Toast.makeText(mContext, "密码已更改", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, R.string.advanced_pwd_changed, Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             });
         });

@@ -1469,7 +1469,371 @@
     <string name="br_scan_status_scanning">扫描中...</string>
     <string name="br_items_summary">已盘点 %1$d/%2$d</string>
 
+    <!-- 模拟器TID输入 -->
+    <string name="br_emulator_tid_title">模拟器模式 - 输入TID</string>
+    <string name="br_emulator_tid_hint">请输入TID值进行模拟扫描</string>
+    <string name="br_emulator_already_audited">该物品已盘点</string>
+    <string name="br_emulator_no_match">未找到匹配该TID的物品: %s</string>
+
     <!-- Dashboard 主界面 -->
     <string name="tab_advanced">高级选项</string>
+
+    <!-- Advanced Menu (高级选项菜单) -->
+    <string name="advanced_scan">扫描</string>
+    <string name="advanced_radar">雷达</string>
+    <string name="advanced_location">定位</string>
+    <string name="advanced_settings">设置</string>
+    <string name="advanced_read_write">读写</string>
+    <string name="advanced_light">灯光</string>
+    <string name="advanced_lock">锁定</string>
+    <string name="advanced_kill">销毁</string>
+    <string name="advanced_block_write">块写入</string>
+    <string name="advanced_permalock">永久锁定</string>
+    <string name="advanced_upgrade">升级</string>
+    <string name="advanced_clear_database">清除数据库</string>
+    <string name="advanced_change_password">更改密码</string>
+
+    <!-- Clear Database (清除数据库) -->
+    <string name="advanced_clear_db_title">清除数据库</string>
+    <string name="advanced_clear_db_message">清除所有数据库数据？此操作无法撤销。</string>
+    <string name="advanced_db_cleared">数据库已清除</string>
+
+    <!-- Change Password (更改密码) -->
+    <string name="advanced_change_pwd_title">更改管理员密码</string>
+    <string name="advanced_old_pwd_hint">输入旧密码</string>
+    <string name="advanced_new_pwd_hint">输入新密码</string>
+    <string name="advanced_confirm_pwd_hint">再次输入新密码</string>
+    <string name="advanced_pwd_old_wrong">旧密码错误</string>
+    <string name="advanced_pwd_empty">新密码不能为空</string>
+    <string name="advanced_pwd_mismatch">两次密码不一致</string>
+    <string name="advanced_pwd_changed">密码已更改</string>
+
+    <!-- Checkout - Excel Export (盘点导出) -->
+    <string name="checkout_audited">✓ 已盘点</string>
+    <string name="checkout_not_audited">✗ 未盘点</string>
+    <string name="checkout_btn_borrow">借</string>
+    <string name="checkout_btn_return">还</string>
+    <string name="checkout_pending_borrow">借出: %d</string>
+    <string name="checkout_pending_return">归还: %d</string>
+    <string name="checkout_student_hint">输入学生编号</string>
+    <string name="checkout_excel_action">操作</string>
+    <string name="checkout_excel_box">所属箱子</string>
+    <string name="checkout_excel_name">物品名称</string>
+    <string name="checkout_excel_tid">TID</string>
+    <string name="checkout_excel_type">类型</string>
+    <string name="checkout_excel_type_box">箱子</string>
+    <string name="checkout_excel_type_content">物品</string>
+    <string name="checkout_excel_type_standalone">独立</string>
+
+    <!-- Item Detail (物品详情) -->
+    <string name="detail_item_detail">物品详情</string>
+    <string name="detail_back">← 返回</string>
+    <string name="detail_section_basic">基本信息</string>
+    <string name="detail_section_box">所属箱子</string>
+    <string name="detail_section_history">历史记录</string>
+    <string name="detail_section_radar">雷达定位</string>
+    <string name="detail_section_status">状态</string>
+    <string name="detail_box_name">箱子: %s</string>
+    <string name="detail_box_tid">箱子TID: %s</string>
+    <string name="detail_category">分类: %s</string>
+    <string name="detail_category_na">分类: 无</string>
+    <string name="detail_desc">描述: %s</string>
+    <string name="detail_desc_na">描述: 无</string>
+    <string name="detail_item_number">物品编号: %s</string>
+    <string name="detail_item_number_na">物品编号: 无</string>
+    <string name="detail_room">房间: %s</string>
+    <string name="detail_room_na">房间: 无</string>
+    <string name="detail_shelf">货架: %s</string>
+    <string name="detail_shelf_na">货架: 无</string>
+    <string name="detail_short_id">简称: %s</string>
+    <string name="detail_short_id_na">简称: 无</string>
+    <string name="detail_stockin_time">入库时间: %s</string>
+    <string name="detail_stockin_time_na">入库时间: 无</string>
+    <string name="detail_status_borrowed">借还状态: 已借出</string>
+    <string name="detail_status_in_stock">借还状态: 在库</string>
+    <string name="detail_type_box_full">类型: 箱子(BOX)</string>
+    <string name="detail_type_content_full">类型: 物品(CONTENT)</string>
+    <string name="detail_type_standalone_full">类型: 独立(STANDALONE)</string>
+    <string name="detail_type_unknown">类型: 未知</string>
+    <string name="detail_history_borrow">借出</string>
+    <string name="detail_history_return">归还</string>
+    <string name="detail_history_si_box">入库(箱子)</string>
+    <string name="detail_history_si_content">入库(物品)</string>
+    <string name="detail_history_si_standalone">入库(独立)</string>
+    <string name="detail_no_history">无历史记录</string>
+    <string name="detail_add_photo_desc">添加照片</string>
+    <string name="detail_delete_photo_desc">删除照片</string>
+    <string name="detail_click_to_close">点击任意位置关闭</string>
+    <string name="detail_photo_saved">照片已保存</string>
+    <string name="detail_radar_start_fail">启动雷达定位失败</string>
+    <string name="detail_start_locate">开始</string>
+    <string name="detail_stop_locate">停止</string>
+    <string name="detail_tid">TID: %s</string>
+    <string name="detail_tid_empty">TID为空，无法定位</string>
+
+    <!-- Password System (密码系统) -->
+    <string name="password_title_admin_verify">管理员验证</string>
+    <string name="password_message_enter">输入管理员密码以访问 %s</string>
+    <string name="password_hint">输入密码</string>
+    <string name="password_wrong">密码错误</string>
+    <string name="password_forgot_reset">忘记密码？重置</string>
+    <string name="password_reset_title">重置密码</string>
+    <string name="password_reset_message">重置为默认密码？</string>
+    <string name="password_reset_done">密码已重置为默认</string>
+
+    <!-- Warehouse - Excel Export (仓库导出) -->
+    <string name="warehouse_excel_item_name">物品名称</string>
+    <string name="warehouse_excel_tid">TID</string>
+    <string name="warehouse_excel_type">类型</string>
+    <string name="warehouse_excel_type_box">箱子</string>
+    <string name="warehouse_excel_type_content">物品</string>
+    <string name="warehouse_excel_type_standalone">独立</string>
+    <string name="warehouse_excel_parent_box">所属箱子</string>
+    <string name="warehouse_excel_cur_status">状态</string>
+    <string name="warehouse_excel_last_time">最后借还时间</string>
+    <string name="warehouse_excel_last_person">最后借用人</string>
+    <string name="warehouse_item_borrowed">已借出</string>
+    <string name="warehouse_item_in_stock">在库</string>
+
+    <!-- Translatable-false technical items (技术项，保持英文不变) -->
+    <string-array name="arrayUart" translatable="false">
+        <item>Barcode</item>
+        <item>RFID</item>
+        <item>UHF</item>
+        <item>Fingerprint</item>
+    </string-array>
+
+    <string-array name="arrayCheck" translatable="false">
+        <item>None</item>
+        <item>Odd</item>
+        <item>Even</item>
+    </string-array>
+
+    <string name="uhf_title_kill" translatable="false">Kill:</string>
+    <string name="uhf_title_access" translatable="false">Access:</string>
+    <string name="uhf_title_uii" translatable="false">UII:</string>
+    <string name="uhf_title_tid" translatable="false">TID:</string>
+    <string name="uhf_title_user" translatable="false">USER:</string>
+
+    <string-array name="arrayPower2" translatable="false">
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+    </string-array>
+
+    <string-array name="arrayFreHop" translatable="false">
+        <item>865.700</item>
+        <item>866.300</item>
+        <item>866.900</item>
+        <item>867.500</item>
+        <item>920.625</item>
+        <item>920.875</item>
+        <item>921.125</item>
+        <item>921.375</item>
+        <item>921.625</item>
+        <item>921.875</item>
+        <item>922.125</item>
+        <item>922.375</item>
+        <item>922.625</item>
+        <item>922.875</item>
+        <item>923.125</item>
+        <item>923.375</item>
+        <item>923.625</item>
+        <item>923.875</item>
+        <item>924.125</item>
+        <item>924.375</item>
+    </string-array>
+
+    <string-array name="arrayFreHop_us" translatable="false">
+        <item>902.75</item>
+        <item>903.25</item>
+        <item>903.75</item>
+        <item>904.25</item>
+        <item>904.75</item>
+        <item>905.25</item>
+        <item>905.75</item>
+        <item>906.25</item>
+        <item>906.75</item>
+        <item>907.25</item>
+        <item>907.75</item>
+        <item>908.25</item>
+        <item>908.75</item>
+        <item>909.25</item>
+        <item>909.75</item>
+        <item>910.25</item>
+        <item>910.75</item>
+        <item>911.25</item>
+        <item>911.75</item>
+        <item>912.25</item>
+        <item>912.75</item>
+        <item>913.25</item>
+        <item>913.75</item>
+        <item>914.25</item>
+        <item>914.75</item>
+        <item>915.25</item>
+        <item>915.75</item>
+        <item>916.25</item>
+        <item>916.75</item>
+        <item>917.25</item>
+        <item>917.75</item>
+        <item>918.25</item>
+        <item>918.75</item>
+        <item>919.25</item>
+        <item>919.75</item>
+        <item>920.25</item>
+        <item>920.75</item>
+        <item>921.25</item>
+        <item>921.75</item>
+        <item>922.25</item>
+        <item>922.75</item>
+        <item>923.25</item>
+        <item>923.75</item>
+        <item>924.25</item>
+        <item>924.75</item>
+        <item>925.25</item>
+        <item>925.75</item>
+        <item>926.25</item>
+        <item>926.75</item>
+        <item>927.25</item>
+    </string-array>
+
+    <string-array name="arrayProtocol" translatable="false">
+        <item>ISO 18000-6C</item>
+        <item>GB/T 29768</item>
+        <item>GJB 7377.1</item>
+        <item>ISO 18000-6B</item>
+    </string-array>
+
+    <string-array name="arrayLink" translatable="false">
+        <item>0-PR ASK/Miller8/160KHz</item>
+        <item>1-PR ASK/Miller4/250KHz</item>
+        <item>2-PR ASK/Miller4/320KHz</item>
+        <item>3-PR ASK/Miller4/640KHz</item>
+        <item>4-PR ASK/Miller2/320KHz</item>
+        <item>5-PR ASK/Miller2/640KHz</item>
+        <item>10-Gen2X/Miller8/160KHz</item>
+        <item>11-Gen2X/Miller4/250KHz</item>
+        <item>12-Gen2X/Miller4/320KHz</item>
+        <item>13-Gen2x/Miller4/640KHz</item>
+        <item>14-Gen2X/Miller2/320KHz</item>
+        <item>15-Gen2X/Miller2/640KHz</item>
+    </string-array>
+
+    <string-array name="arrayMemoryBank" translatable="false">
+        <item>EPC</item>
+        <item>EPC＋TID</item>
+        <item>EPC＋TID＋USER</item>
+        <item>EPC＋RESERVED</item>
+        <item>LED TAG</item>
+    </string-array>
+
+    <string-array name="arrayThreshold" translatable="false">
+        <item>level1(22)</item>
+        <item>level2(36)</item>
+        <item>level3(50)</item>
+        <item>level4(60)</item>
+        <item>level5(70)</item>
+    </string-array>
+
+    <string-array name="arrayPacketSize" translatable="false">
+        <item>32bytes</item>
+        <item>64bytes</item>
+        <item>128bytes</item>
+        <item>256bytes</item>
+    </string-array>
+
+    <string-array name="arrayPSAMBaud" translatable="false">
+        <item>9600</item>
+        <item>19200</item>
+        <item>38400</item>
+        <item>57600</item>
+        <item>115200</item>
+    </string-array>
+
+    <string-array name="arrayUartBaud" translatable="false">
+        <item>600</item>
+        <item>1200</item>
+        <item>2400</item>
+        <item>4800</item>
+        <item>9600</item>
+        <item>19200</item>
+        <item>38400</item>
+        <item>57600</item>
+        <item>115200</item>
+    </string-array>
+
+    <string-array name="arrayFringeprintBaud" translatable="false">
+        <item>57600</item>
+        <item>115200</item>
+    </string-array>
+
+    <string-array name="arrayDesFirePwdMode" translatable="false">
+        <item>AES</item>
+        <item>DES</item>
+    </string-array>
+
+    <string-array name="arrayDesFirePwdNum" translatable="false">
+        <item>00</item>
+        <item>01</item>
+        <item>02</item>
+        <item>03</item>
+        <item>04</item>
+        <item>05</item>
+        <item>06</item>
+        <item>07</item>
+        <item>08</item>
+        <item>09</item>
+        <item>0A</item>
+        <item>0B</item>
+        <item>0C</item>
+        <item>0D</item>
+    </string-array>
+
+    <string-array name="desfire_array_hex" translatable="false">
+        <item>00</item>
+        <item>01</item>
+        <item>02</item>
+        <item>03</item>
+        <item>04</item>
+        <item>05</item>
+        <item>06</item>
+        <item>07</item>
+        <item>08</item>
+        <item>09</item>
+        <item>0A</item>
+        <item>0B</item>
+        <item>0C</item>
+        <item>0D</item>
+        <item>0E</item>
+        <item>0F</item>
+    </string-array>
+
+    <string name="title_about_cpu" translatable="false">CPU:</string>
+    <string name="title_activity_nfc" translatable="false">NFC</string>
+    <string name="title_activity_ping_pop" translatable="false">PingPopActivity</string>
+    <string name="title_activity_to_service_page" translatable="false">ToServicePageActivity</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="er_dsoft_get_ParamNum" translatable="false">ParamNum</string>
+    <string name="er_dsoft_get_ParamVal" translatable="false">ParamVal</string>
+    <string name="msg_rfid_set" translatable="false">RFID</string>
+    <string name="msg_psam_set" translatable="false">PSAM</string>
+
 
 </resources>

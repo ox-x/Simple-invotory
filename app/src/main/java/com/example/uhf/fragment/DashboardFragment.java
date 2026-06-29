@@ -107,12 +107,12 @@ public class DashboardFragment extends KeyDwonFragment {
 
     private void showPasswordDialog(String featureLabel, Class<?> targetFragment) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle("管理员验证");
-        builder.setMessage("请输入管理员密码以进入" + featureLabel);
+        builder.setTitle(R.string.password_title_admin_verify);
+        builder.setMessage(getString(R.string.password_message_enter, featureLabel));
 
         final EditText etPassword = new EditText(mContext);
         etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        etPassword.setHint("请输入密码");
+        etPassword.setHint(R.string.password_hint);
         etPassword.setSingleLine(true);
 
         LinearLayout wrapper = new LinearLayout(mContext);
@@ -121,9 +121,9 @@ public class DashboardFragment extends KeyDwonFragment {
         wrapper.addView(etPassword);
         builder.setView(wrapper);
 
-        builder.setPositiveButton("确定", null);
-        builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
-        builder.setNeutralButton("忘记密码？重置", null);
+        builder.setPositiveButton(R.string.ok, null);
+        builder.setNegativeButton(R.string.button_cancel, (dialog, which) -> dialog.dismiss());
+        builder.setNeutralButton(R.string.password_forgot_reset, null);
 
         final AlertDialog dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
@@ -135,7 +135,7 @@ public class DashboardFragment extends KeyDwonFragment {
                     dialog.dismiss();
                     mContext.openFeature(targetFragment, featureLabel);
                 } else {
-                    Toast.makeText(mContext, "密码错误", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, R.string.password_wrong, Toast.LENGTH_SHORT).show();
                     etPassword.setText("");
                 }
             });
@@ -149,18 +149,18 @@ public class DashboardFragment extends KeyDwonFragment {
     }
 
     /**
-     * 显示重置密码确认对话框。
+     * Show reset password confirmation dialog.
      */
     private void showResetPasswordConfirmationDialog(AlertDialog passwordDialog, String featureLabel, Class<?> targetFragment) {
         new AlertDialog.Builder(mContext)
-                .setTitle("重置密码")
-                .setMessage("确定要将密码重置为默认值吗？")
-                .setPositiveButton("确定", (confirmDialog, which) -> {
+                .setTitle(R.string.password_reset_title)
+                .setMessage(R.string.password_reset_message)
+                .setPositiveButton(R.string.ok, (confirmDialog, which) -> {
                     setAdminPassword(mContext, DEFAULT_PASSWORD);
-                    Toast.makeText(mContext, "密码已重置为默认值", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, R.string.password_reset_done, Toast.LENGTH_SHORT).show();
                     passwordDialog.dismiss();
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton(R.string.button_cancel, null)
                 .show();
     }
 

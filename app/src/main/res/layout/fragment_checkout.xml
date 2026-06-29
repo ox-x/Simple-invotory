@@ -180,8 +180,9 @@
                 android:paddingRight="4dp"
                 android:text="@string/br_filter_borrowed"
                 android:textColor="@color/white"
-                android:textSize="11sp"
-                android:textStyle="bold" />
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:gravity="center" />
 
             <Button
                 android:id="@+id/btnFilterAudited"
@@ -326,16 +327,58 @@
         app:cardCornerRadius="16dp"
         app:cardBackgroundColor="@color/module_checkout_light">
 
-        <TextView
-            android:id="@+id/tvScanStatus"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="@dimen/sp_sm"
-            android:text="@string/br_scan_status_ready"
-            android:textColor="@color/module_checkout"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            android:orientation="vertical"
+            android:padding="@dimen/sp_sm">
+
+            <TextView
+                android:id="@+id/tvScanStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/br_scan_status_ready"
+                android:textColor="@color/module_checkout"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <!-- 模拟器TID输入行 -->
+            <LinearLayout
+                android:id="@+id/llEmulatorTidInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/etEmulatorTid"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_input_rounded"
+                    android:hint="@string/br_emulator_tid_hint"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:textSize="13sp" />
+
+                <Button
+                    android:id="@+id/btnEmulatorTidConfirm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_btn_checkout_primary"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:text="@string/ok"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
     <!-- ============ 物品列表卡片 ============ -->
