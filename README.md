@@ -85,6 +85,3 @@ app/src/main/java/com/example/uhf/
 | ![Dashboard](screenshots/dashboard.png) | ![Checkout](screenshots/checkout.png) | ![Warehouse](screenshots/warehouse.png) |
 
 
-## 许可证
-
-[MIT License](LICENSE)
