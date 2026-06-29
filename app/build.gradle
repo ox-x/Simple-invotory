@@ -7,7 +7,7 @@ plugins {
 // 主版本号（重大变更）| 次版本号（新增功能）| 修订号（Bug修复）
 def versionMajor = 1
 def versionMinor = 3
-def versionPatch = 3
+def versionPatch = 4
 
 android {
     namespace 'com.example.uhf'
@@ -56,8 +56,8 @@ android {
         // 自定义apk名称
         android.applicationVariants.all { variant ->
             variant.outputs.all {
-                outputFileName = "UHF-serial_v${defaultConfig.versionName}.apk"
-                // 例如：UHF-serial_v1.0.0.apk
+                outputFileName = "简库_v${defaultConfig.versionName}.apk"
+                // 例如：简库_v1.0.0.apk
             }
         }
     }

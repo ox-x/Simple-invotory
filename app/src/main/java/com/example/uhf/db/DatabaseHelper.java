@@ -573,7 +573,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (!oldType.equals(newType)) {
             if ("BOX".equals(oldType)) {
                 // Was a box → remove from boxes table (also cascades to contents)
+                // Get content EPCs BEFORE deleting, so we can cascade to stock_ins
+                List<ContentInfo> oldContents = getContentsByBoxEpc(epc);
                 deleteBox(epc);
+                // Cascade: change orphaned content items to STANDALONE in stock_ins
+                if (!oldContents.isEmpty()) {
+                    ContentValues contentCv = new ContentValues();
+                    contentCv.put(SI_TYPE, "STANDALONE");
+                    contentCv.put(SI_BOX_EPC, "");
+                    SQLiteDatabase dbCascade = getWritableDatabase();
+                    for (ContentInfo ct : oldContents) {
+                        dbCascade.update(TABLE_STOCK_INS, contentCv,
+                                SI_EPC + "=?", new String[]{ct.epc});
+                    }
+                }
             } else if ("CONTENT".equals(oldType)) {
                 // Was content → remove from contents table
                 if (!oldBoxEpc.isEmpty()) {

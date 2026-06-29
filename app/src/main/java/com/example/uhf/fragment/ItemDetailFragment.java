@@ -268,6 +268,8 @@ public class ItemDetailFragment extends KeyDwonFragment {
                 llDetailBoxSelection.setVisibility(View.VISIBLE);
             } else {
                 llDetailBoxSelection.setVisibility(View.GONE);
+                // Clear box selection when not CONTENT to avoid stale data
+                detailSelectedBoxEpc = "";
             }
         });
 
@@ -844,6 +846,9 @@ public class ItemDetailFragment extends KeyDwonFragment {
                 return;
             }
             newBoxEpc = detailSelectedBoxEpc;
+        } else if ("BOX".equals(newType)) {
+            // BOX type cannot be content of another box
+            newBoxEpc = "";
         }
 
         // Build photo paths JSON
@@ -875,10 +880,17 @@ public class ItemDetailFragment extends KeyDwonFragment {
 
     /**
      * Load box list into the box selection spinner in edit mode.
+     * Excludes the current item's own EPC to prevent a box from selecting itself.
      */
     private void loadDetailBoxList() {
         detailBoxList.clear();
-        detailBoxList.addAll(dbHelper.getAllBoxes());
+        List<BoxInfo> allBoxes = dbHelper.getAllBoxes();
+        for (BoxInfo box : allBoxes) {
+            // A box cannot be its own content; exclude current EPC from selection
+            if (!box.epc.equals(itemEpc)) {
+                detailBoxList.add(box);
+            }
+        }
         List<String> spinnerItems = new ArrayList<>();
         spinnerItems.add(getString(R.string.detail_no_box_selected));
         for (BoxInfo box : detailBoxList) {
