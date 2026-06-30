@@ -1849,6 +1849,7 @@
     <string name="oplog_network_instruction">同WiFi设备访问 %s | 点击本机打开</string>
     <string name="oplog_running_msg">无线服务运行中: %s</string>
     <string name="oplog_open_browser_failed">打开浏览器失败</string>
+    <string name="oplog_qrcode_hint">用其他手机扫描二维码访问</string>
 
     <!-- Web Server (WirelessLogServer) -->
     <string name="web_nav_logs">操作日志</string>

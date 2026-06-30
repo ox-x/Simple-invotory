@@ -1890,6 +1890,7 @@ r</string>
     <string name="oplog_network_instruction">Same WiFi devices visit %s | Tap to open locally</string>
     <string name="oplog_running_msg">Wireless service running: %s</string>
     <string name="oplog_open_browser_failed">Failed to open browser</string>
+     <string name="oplog_qrcode_hint">Scan QR code with another phone to access</string>
 
     <!-- Web Server (WirelessLogServer) -->
     <string name="web_nav_logs">Operation Logs</string>

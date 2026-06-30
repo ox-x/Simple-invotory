@@ -1,6 +1,8 @@
 package com.example.uhf.fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +25,11 @@ import com.example.uhf.activity.UHFMainActivity;
 import com.example.uhf.tools.EmulatorDetector;
 import com.example.uhf.tools.OperationLogManager;
 import com.example.uhf.tools.WirelessLogServer;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.util.List;
 import java.util.Locale;
@@ -36,8 +45,10 @@ public class LogViewerFragment extends KeyDwonFragment {
     private TextView tvHint, tvWirelessStatus;
     private LogAdapter adapter;
     private OperationLogManager logManager;
-     private static WirelessLogServer wirelessServer;
+    private static WirelessLogServer wirelessServer;
     private Button btnWireless;
+    private LinearLayout llQrCode;
+    private ImageView ivQrCode;
 
     // 自动刷新
     private final Handler autoRefreshHandler = new Handler(Looper.getMainLooper());
@@ -68,6 +79,8 @@ public class LogViewerFragment extends KeyDwonFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         tvHint = v.findViewById(R.id.tvLogHint);
         tvWirelessStatus = v.findViewById(R.id.tvWirelessStatus);
+        llQrCode = v.findViewById(R.id.llQrCode);
+        ivQrCode = v.findViewById(R.id.ivQrCode);
 
         v.findViewById(R.id.btnRefresh).setOnClickListener(v2 -> {
             refreshLogs();
@@ -145,6 +158,7 @@ public class LogViewerFragment extends KeyDwonFragment {
                         Toast.LENGTH_SHORT).show();
             } else {
                 // 服务器启动失败
+                llQrCode.setVisibility(View.GONE);
                 btnWireless.setText(R.string.oplog_start_failed);
                 btnWireless.setBackgroundResource(0);
                 btnWireless.setBackgroundColor(0xFFE53935);
@@ -159,6 +173,8 @@ public class LogViewerFragment extends KeyDwonFragment {
     /** 显示服务器运行中状态 */
     private void showServerRunning() {
         if (wirelessServer == null || !wirelessServer.isRunning()) {
+            // 隐藏二维码
+            llQrCode.setVisibility(View.GONE);
             // 尝试清理旧的服务器实例
             if (wirelessServer != null) {
                 wirelessServer.stop();
@@ -182,7 +198,37 @@ public class LogViewerFragment extends KeyDwonFragment {
         // 点击状态栏打开浏览器
         tvWirelessStatus.setOnClickListener(v -> openBrowser("http://127.0.0.1:8080"));
 
+        // 生成并显示二维码
+        Bitmap qrBitmap = generateQrCode(url, 400);
+        if (qrBitmap != null) {
+            ivQrCode.setImageBitmap(qrBitmap);
+            llQrCode.setVisibility(View.VISIBLE);
+        }
+
         Toast.makeText(mContext, String.format(getString(R.string.oplog_running_msg), url), Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 使用 ZXing 生成二维码 Bitmap
+     * @param text 二维码内容（URL）
+     * @param size 图片尺寸（像素）
+     * @return 二维码 Bitmap，失败返回 null
+     */
+    private Bitmap generateQrCode(String text, int size) {
+        try {
+            QRCodeWriter writer = new QRCodeWriter();
+            BitMatrix matrix = writer.encode(text, BarcodeFormat.QR_CODE, size, size);
+            Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565);
+            for (int x = 0; x < size; x++) {
+                for (int y = 0; y < size; y++) {
+                    bitmap.setPixel(x, y, matrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                }
+            }
+            return bitmap;
+        } catch (WriterException e) {
+            Log.e("LogViewer", "生成二维码失败", e);
+            return null;
+        }
     }
 
     /** 用设备浏览器打开指定网址 */

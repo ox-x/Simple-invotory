@@ -1,6 +1,7 @@
 package com.example.uhf.tools;
 
 import android.os.Build;
+import android.util.Log;
 
 /**
  * 模拟器/虚拟设备检测工具类。
@@ -11,6 +12,7 @@ import android.os.Build;
  */
 public class EmulatorDetector {
 
+    private static final String TAG = "EmulatorDetector";
     private static Boolean sIsEmulatorCache = null;
 
     /**
@@ -27,35 +29,43 @@ public class EmulatorDetector {
     }
 
     private static boolean detectEmulator() {
-        // 方法1: 检查 Build 特征
-        if (checkBuildProperties()) {
-            return true;
-        }
+        int score = 0;
 
-        // 方法2: 检查特定文件/设备
-        if (checkDeviceSpecific()) {
-            return true;
-        }
+        // 方法1: 检查 Build 特征 (每条命中加分)
+        score += scoreBuildProperties();
 
-        // 方法3: 检查附加特征 (设备名、主板、序列号等)
-        if (checkAdditionalProperties()) {
-            return true;
-        }
+        // 方法2: 检查附加特征 (设备名、主板、序列号等)
+        score += scoreAdditionalProperties();
 
-        return false;
+        // 输出设备信息日志，方便排查真机误判问题
+        Log.i(TAG, "Emulator score=" + score
+                + " | FINGERPRINT=" + Build.FINGERPRINT
+                + " | MODEL=" + Build.MODEL
+                + " | PRODUCT=" + Build.PRODUCT
+                + " | HARDWARE=" + Build.HARDWARE
+                + " | DEVICE=" + Build.DEVICE
+                + " | BOARD=" + Build.BOARD
+                + " | MANUFACTURER=" + Build.MANUFACTURER
+                + " | BRAND=" + Build.BRAND);
+
+        // 需要达到足够的模拟器特征分数才判定为模拟器
+        // 避免单一特征在真实设备上造成误判
+        return score >= 3;
     }
 
     /**
-     * 检查常见的模拟器 Build 属性特征。
+     * 对 Build 属性进行评分，每条强模拟器特征 +1 分。
+     * 仅使用高度可靠的模拟器特征，避免在真实UHF手持设备上误判。
      */
-    private static boolean checkBuildProperties() {
+    private static int scoreBuildProperties() {
+        int score = 0;
+
         String fingerprint = Build.FINGERPRINT;
         if (fingerprint != null) {
-            if (fingerprint.contains("generic")
-                    || fingerprint.contains("emu")
-                    || fingerprint.contains("test-keys")) {
-                return true;
+            if (fingerprint.contains("generic") || fingerprint.contains("emu")) {
+                score++;
             }
+            // 移除 test-keys 检测：很多真实国产设备也使用 test-keys
         }
 
         String model = Build.MODEL;
@@ -69,22 +79,24 @@ public class EmulatorDetector {
                     || model.contains("emu32")
                     || model.equals("Android SDK built for arm64")
                     || model.contains("AOSP on")) {
-                return true;
+                score++;
             }
         }
 
         String manufacturer = Build.MANUFACTURER;
         if (manufacturer != null) {
-            if (manufacturer.contains("Genymotion")
-                    || manufacturer.contains("Google")
+            if (manufacturer.contains("Genymotion")) {
+                score++;
+            }
+            if (manufacturer.contains("Google")
                     && model != null && model.contains("sdk")) {
-                return true;
+                score++;
             }
         }
 
         String brand = Build.BRAND;
         if (brand != null && brand.contains("generic") && model != null && model.contains("generic")) {
-            return true;
+            score++;
         }
 
         String product = Build.PRODUCT;
@@ -92,10 +104,10 @@ public class EmulatorDetector {
             if (product.contains("sdk")
                     || product.contains("emu")
                     || product.contains("vbox")
-                    || product.contains("generic")
                     || product.contains("aosp")) {
-                return true;
+                score++;
             }
+            // 移除 "generic" 单独检测：一些真实手持设备 product 含 generic
         }
 
         String hardware = Build.HARDWARE;
@@ -104,67 +116,51 @@ public class EmulatorDetector {
                     || hardware.contains("ranchu")
                     || hardware.contains("vbox")
                     || hardware.contains("qemu")) {
-                return true;
+                score++;
             }
         }
 
-        return false;
+        return score;
     }
 
-    /**
-     * 检查设备特定的模拟器特征（无线电、文件系统等）。
-     */
-    private static boolean checkDeviceSpecific() {
-        // Android模拟器通常有特定的无线电固件版本
-        String radioVersion = getRadioVersion();
-        if (radioVersion != null && radioVersion.contains("Unknown")) {
-            return true;
-        }
-
-        return false;
-    }
+    // 移除了 checkDeviceSpecific 方法：
+    // Build.getRadioVersion() 返回 "Unknown" 在很多无基带的真实手持设备上也会出现，
+    // 不适合作为模拟器判断依据。
 
     /**
-     * 检查附加的 Build 属性特征。
+     * 对附加 Build 属性进行评分。
+     * 移除了容易在真实设备上误判的检测项：
+     * - BOARD="unknown" 和 BOOTLOADER="unknown" 在真实手持设备上很常见
+     * - HOST 包含 "build" 在真实设备上也很常见
      */
-    private static boolean checkAdditionalProperties() {
+    private static int scoreAdditionalProperties() {
+        int score = 0;
+
         String device = Build.DEVICE;
         if (device != null) {
             if (device.contains("generic")
                     || device.contains("emu64")
                     || device.contains("emu32")
-                    || device.contains("vsoc")
-                    || device.contains("hikey")) {
-                return true;
+                    || device.contains("vsoc")) {
+                score++;
             }
+            // 移除 "hikey" 检测：hikey 是真实开发板
         }
 
+        // 仅检测明确的模拟器硬件标识（goldfish/ranchu）
         String board = Build.BOARD;
-        if (board != null && (board.contains("unknown")
-                || board.contains("goldfish")
-                || board.contains("ranchu"))) {
-            return true;
+        if (board != null && board.contains("goldfish")) {
+            score++;
+        }
+        if (board != null && board.contains("ranchu")) {
+            score++;
         }
 
-        String bootloader = Build.BOOTLOADER;
-        if (bootloader != null && (bootloader.contains("unknown")
-                || bootloader.equals("qemu"))) {
-            return true;
-        }
-
-        String host = Build.HOST;
-        if (host != null && (host.contains("android-")
-                || host.contains("qemu")
-                || host.contains("build"))) {
-            return true;
-        }
-
-        return false;
+        return score;
     }
 
-    /**
-     * 安全地获取无线电固件版本，不会抛出异常。
-     */
+    // getRadioVersion 不再用于模拟器检测，但保留方法以备后用
+    @SuppressWarnings("unused")
     private static String getRadioVersion() {
         try {
             return Build.getRadioVersion();
