@@ -47,6 +47,7 @@ public class WirelessLogServer {
         String getLogHtmlContent();
     }
     private LogProvider logProvider;
+    private static boolean isChinese = false;
 
     // 数据库访问（可选，提供后开启仓库管理功能）
     private DatabaseHelper dbHelper;
@@ -63,6 +64,11 @@ public class WirelessLogServer {
     public WirelessLogServer(Context context, LogProvider provider) {
         this.logProvider = provider;
         this.deviceIp = getDeviceIpAddress();
+        // 检测设备语言用于网页国际化
+        try {
+            Locale locale = context.getResources().getConfiguration().getLocales().get(0);
+            this.isChinese = locale.getLanguage().equals("zh");
+        } catch (Exception ignored) {}
         try {
             this.dbHelper = DatabaseHelper.getInstance(context);
         } catch (Exception e) {
@@ -263,7 +269,7 @@ public class WirelessLogServer {
         String logActive = active.equals("logs") ? " class='active'" : "";
         return "<div class='nav'>"
                 + "<a href='/' " + whActive + ">\uD83D\uDCE6 仓库管理</a>"
-                + "<a href='/logs' " + logActive + ">\uD83D\uDCCB 操作日志</a>"
+                + "<a href='/logs' " + logActive + ">\uD83D\uDCCB " + t("Operation Logs", "操作日志") + "</a>"
                 + "</div>";
     }
 
@@ -444,7 +450,7 @@ public class WirelessLogServer {
                 + "</style><script>"
                 + "var currentFilter='all';"
                 + "function toggleGroup(epc){var c=document.getElementById('children-'+epc);var a=document.getElementById('arrow-'+epc);if(c){var d=c.style.display;c.style.display=d==='block'?'none':'block';if(a)a.style.transform=d==='block'?'rotate(0deg)':'rotate(180deg)'}}"
-                + "function filterItems(){var q=(document.getElementById('searchInput').value||'').toLowerCase();document.querySelectorAll('.item-group').forEach(function(g){var ms=q===''||(g.dataset.name||'').toLowerCase().includes(q)||(g.dataset.epc||'').toLowerCase().includes(q)||(g.dataset.desc||'').toLowerCase().includes(q);g.querySelectorAll('.child-row').forEach(function(c){var cm=q===''||(c.dataset.name||'').toLowerCase().includes(q)||(c.dataset.epc||'').toLowerCase().includes(q)||(c.dataset.desc||'').toLowerCase().includes(q);var cf=currentFilter==='all'||c.dataset.status===currentFilter;var visible=cm&&cf;c.style.display=visible?'':'none';if(visible)anyChildVisible=true;if(cm)ms=true;});var fm=currentFilter==='all'||g.dataset.status===currentFilter;g.style.display=(ms&&fm)||anyChildVisible?'':'none';});}"
+                + "function filterItems(){var q=(document.getElementById('searchInput').value||'').toLowerCase();document.querySelectorAll('.item-group').forEach(function(g){var ms=q===''||(g.dataset.name||'').toLowerCase().includes(q)||(g.dataset.epc||'').toLowerCase().includes(q)||(g.dataset.desc||'').toLowerCase().includes(q);var anyChildVisible=false;g.querySelectorAll('.child-row').forEach(function(c){var cm=q===''||(c.dataset.name||'').toLowerCase().includes(q)||(c.dataset.epc||'').toLowerCase().includes(q)||(c.dataset.desc||'').toLowerCase().includes(q);var cf=currentFilter==='all'||c.dataset.status===currentFilter;var visible=cm&&cf;c.style.display=visible?'':'none';if(visible)anyChildVisible=true;if(cm)ms=true;});var fm=currentFilter==='all'||g.dataset.status===currentFilter;g.style.display=(ms&&fm)||anyChildVisible?'':'none';});}"
                 + "function setFilter(f){currentFilter=f;document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('filter-on')});document.getElementById('filter-'+f).classList.add('filter-on');filterItems();}"
                 + "function refreshData(){fetch('/api/data').then(function(r){return r.json()}).then(function(data){document.getElementById('info-time').textContent=data.timestamp;if(data.stats){document.getElementById('stat-boxes').innerHTML='箱子: <b>'+data.stats.boxCount+'</b>';document.getElementById('stat-items').innerHTML='物资: <b>'+data.stats.itemCount+'</b>';document.getElementById('stat-instock').innerHTML='在库: <b>'+data.stats.inStock+'</b>';document.getElementById('stat-borrowed').innerHTML='借出: <b>'+data.stats.borrowed+'</b>';document.getElementById('stat-standalone').innerHTML='独立: <b>'+data.stats.standaloneCount+'</b>';}(data.items||[]).forEach(function(item){var g=document.querySelector('.item-group[data-epc=\"'+item.epc+'\"]');if(g){var b=g.querySelector('.item-row>.item-status');if(b){b.textContent=item.borrowStatus==='BORROWED'?'\u5DF2\u501F\u51FA':'\u5728\u5E93';b.className='item-status '+(item.borrowStatus==='BORROWED'?'status-borrowed':'status-instock');g.dataset.status=item.borrowStatus;}(item.children||[]).forEach(function(child){var cr=g.querySelector('.child-row[data-epc=\"'+child.epc+'\"]');if(cr){var cb=cr.querySelector('.item-status');if(cb){cb.textContent=child.borrowStatus==='BORROWED'?'\u5DF2\u501F\u51FA':'\u5728\u5E93';cb.className='item-status '+(child.borrowStatus==='BORROWED'?'status-borrowed':'status-instock');cr.dataset.status=child.borrowStatus;}}});}});filterItems();}).catch(function(e){console.log('Refresh error:',e);});}"
                 + "setInterval(refreshData,10000);"
@@ -810,6 +816,10 @@ public class WirelessLogServer {
         return (value != null && !value.isEmpty()) ? value : "-";
     }
 
+    private static String t(String en, String zh) {
+        return isChinese ? zh : en;
+    }
+
     // ==================== 日志页面 ====================
 
     /** 构建操作日志页面 */
@@ -823,7 +833,7 @@ public class WirelessLogServer {
                 + "<meta charset='utf-8'>"
                 + "<meta http-equiv='refresh' content='5'>"
                 + "<meta name='viewport' content='width=device-width,initial-scale=1'>"
-                + "<title>Simple Invotry - 操作日志</title>"
+                + "<title>" + t("Simple Invotry - Operation Logs", "Simple Invotry - 操作日志") + "</title>"
                 + "<style>"
                 + "*{box-sizing:border-box;margin:0;padding:0}"
                 + "body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;"
@@ -861,20 +871,20 @@ public class WirelessLogServer {
                 + "</style></head><body>"
                 + navHtml("logs")
                 + "<div class='content'>"
-                + "<h2>\uD83D\uDCCB Simple Invotry 操作日志</h2>"
+                + "<h2>\uD83D\uDCCB " + t("Simple Invotry Operation Logs", "Simple Invotry 操作日志") + "</h2>"
                 + "<div class='info'>"
                 + "\uD83D\uDD50 " + now
-                + " &nbsp;|&nbsp; \uD83D\uDCF6 页面每5秒自动刷新"
-                + " &nbsp;|&nbsp; <span class='badge'>实时无线日志</span>"
+                + " &nbsp;|&nbsp; " + t("\uD83D\uDCF6 Page auto-refreshes every 5 seconds", "\uD83D\uDCF6 页面每5秒自动刷新")
+                + " &nbsp;|&nbsp; <span class='badge'>" + t("Real-time Wireless Logs", "实时无线日志") + "</span>"
                 + "</div>"
                 + "<table><thead><tr>"
-                + "<th style='width:160px'>时间</th>"
-                + "<th style='width:70px'>类型</th>"
-                + "<th>操作内容</th>"
+                + "<th style='width:160px'>" + t("Time", "时间") + "</th>"
+                + "<th style='width:70px'>" + t("Type", "类型") + "</th>"
+                + "<th>" + t("Content", "操作内容") + "</th>"
                 + "</tr></thead><tbody>"
                 + logsHtml
                 + "</tbody></table>"
-                + "<div class='footer'>Simple Invotry - 操作日志</div>"
+                + "<div class='footer'>" + t("Simple Invotry - Operation Logs", "Simple Invotry - 操作日志") + "</div>"
                 + "</div>"
                 + "</body></html>";
     }
@@ -883,7 +893,7 @@ public class WirelessLogServer {
     public static String buildLogRows(List<OperationLogManager.LogEntry> logs) {
         if (logs == null || logs.isEmpty()) {
             return "<tr><td colspan='3' style='text-align:center;color:#999;padding:24px'>"
-                    + "\u6682\u65E0\u65E5\u5FD7\u8BB0\u5F55</td></tr>";
+                    + t("No log records", "\u6682\u65E0\u65E5\u5FD7\u8BB0\u5F55") + "</td></tr>";
         }
         StringBuilder sb = new StringBuilder();
         // 倒序显示（最新的在前）

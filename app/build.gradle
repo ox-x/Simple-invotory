@@ -7,7 +7,7 @@ plugins {
 // 主版本号（重大变更）| 次版本号（新增功能）| 修订号（Bug修复）
 def versionMajor = 1
 def versionMinor = 6
-def versionPatch = 0
+def versionPatch = 1
 
 android {
     namespace 'com.example.uhf'

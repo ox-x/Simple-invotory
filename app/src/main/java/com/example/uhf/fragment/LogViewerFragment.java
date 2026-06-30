@@ -35,7 +35,7 @@ public class LogViewerFragment extends KeyDwonFragment {
     private TextView tvHint, tvWirelessStatus;
     private LogAdapter adapter;
     private OperationLogManager logManager;
-    private static WirelessLogServer wirelessServer;
+     private static WirelessLogServer wirelessServer;
     private Button btnWireless;
 
     // 自动刷新
@@ -70,7 +70,7 @@ public class LogViewerFragment extends KeyDwonFragment {
 
         v.findViewById(R.id.btnRefresh).setOnClickListener(v2 -> {
             refreshLogs();
-            Toast.makeText(mContext, "已刷新", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, getString(R.string.oplog_refreshed), Toast.LENGTH_SHORT).show();
         });
 
         btnWireless = v.findViewById(R.id.btnWireless);
@@ -140,17 +140,17 @@ public class LogViewerFragment extends KeyDwonFragment {
                 openBrowser("http://127.0.0.1:8080");
 
                 Toast.makeText(mContext,
-                        "无线日志服务已启动，浏览器已自动打开",
+                        getString(R.string.oplog_started_toast),
                         Toast.LENGTH_SHORT).show();
             } else {
                 // 服务器启动失败
-                btnWireless.setText("启动失败");
+                btnWireless.setText(R.string.oplog_start_failed);
                 btnWireless.setBackgroundResource(0);
                 btnWireless.setBackgroundColor(0xFFE53935);
                 tvWirelessStatus.setVisibility(View.VISIBLE);
-                tvWirelessStatus.setText("无线服务启动失败，请稍后重试");
+                tvWirelessStatus.setText(R.string.oplog_start_failed_msg);
                 tvWirelessStatus.setOnClickListener(null);
-                Toast.makeText(mContext, "无线服务启动失败，请稍后重试", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, getString(R.string.oplog_start_failed_msg), Toast.LENGTH_SHORT).show();
             }
         }, 200);
     }
@@ -166,22 +166,22 @@ public class LogViewerFragment extends KeyDwonFragment {
             return;
         }
         String url = wirelessServer.getAccessUrl();
-        btnWireless.setText("在线");
+        btnWireless.setText(R.string.oplog_running);
         btnWireless.setBackgroundResource(0);
         btnWireless.setBackgroundColor(0xFF43A047);
         tvWirelessStatus.setVisibility(View.VISIBLE);
 
         boolean isEmulator = EmulatorDetector.isEmulator();
         if (isEmulator) {
-            tvWirelessStatus.setText("电脑运行: adb forward tcp:8080 tcp:8080 然后访问 http://localhost:8080");
+            tvWirelessStatus.setText(R.string.oplog_emulator_instruction);
         } else {
-            tvWirelessStatus.setText("同WiFi设备访问 " + url + " | 点击本机打开");
+            tvWirelessStatus.setText(String.format(getString(R.string.oplog_network_instruction), url));
         }
 
         // 点击状态栏打开浏览器
         tvWirelessStatus.setOnClickListener(v -> openBrowser("http://127.0.0.1:8080"));
 
-        Toast.makeText(mContext, "无线服务运行中: " + url, Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, String.format(getString(R.string.oplog_running_msg), url), Toast.LENGTH_SHORT).show();
     }
 
     /** 用设备浏览器打开指定网址 */

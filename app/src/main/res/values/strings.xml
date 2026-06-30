@@ -1876,4 +1876,30 @@ r</string>
     <string name="advanced_pwd_mismatch">Passwords do not match</string>
     <string name="advanced_pwd_changed">Password changed</string>
 
+    <!-- Operation Log (操作日志) -->
+    <string name="oplog_refresh">Refresh</string>
+    <string name="oplog_wireless_view">Wireless View</string>
+    <string name="oplog_hint_text">Operation logs will appear here after using app features.</string>
+    <string name="oplog_refreshed">Refreshed</string>
+    <string name="oplog_started_toast">Wireless log service started, browser opened automatically</string>
+    <string name="oplog_start_failed">Start Failed</string>
+    <string name="oplog_start_failed_msg">Wireless service failed to start, please try again later</string>
+    <string name="oplog_running">Online</string>
+    <string name="oplog_emulator_instruction">On PC: adb forward tcp:8080 tcp:8080 then visit http://localhost:8080</string>
+    <string name="oplog_network_instruction">Same WiFi devices visit %s | Tap to open locally</string>
+    <string name="oplog_running_msg">Wireless service running: %s</string>
+    <string name="oplog_open_browser_failed">Failed to open browser</string>
+
+    <!-- Web Server (WirelessLogServer) -->
+    <string name="web_nav_logs">Operation Logs</string>
+    <string name="web_logs_title">Simple Invotry - Operation Logs</string>
+    <string name="web_logs_heading">Simple Invotry Operation Logs</string>
+    <string name="web_logs_auto_refresh">Page auto-refreshes every 5 seconds</string>
+    <string name="web_logs_realtime">Real-time Wireless Logs</string>
+    <string name="web_logs_col_time">Time</string>
+    <string name="web_logs_col_type">Type</string>
+    <string name="web_logs_col_content">Content</string>
+    <string name="web_logs_footer">Simple Invotry - Operation Logs</string>
+    <string name="web_logs_empty">No log records</string>
+
 </resources>

@@ -25,7 +25,7 @@
             android:background="#00897B"
             android:gravity="center"
             android:maxLines="1"
-            android:text="刷新"
+            android:text="@string/oplog_refresh"
             android:textColor="#FFFFFF"
             android:textSize="13sp" />
 
@@ -41,7 +41,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
-            android:text="无线查看"
+            android:text="@string/oplog_wireless_view"
             android:textColor="#FFFFFF"
             android:textSize="13sp" />
 
@@ -70,7 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="12dp"
-        android:text="操作日志将在此显示，开始使用各功能模块后将自动记录。"
+        android:text="@string/oplog_hint_text"
         android:textColor="#999999"
         android:textSize="13sp"
         android:gravity="center"
