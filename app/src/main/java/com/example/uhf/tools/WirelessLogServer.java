@@ -268,7 +268,7 @@ public class WirelessLogServer {
         String whActive = active.equals("warehouse") ? " class='active'" : "";
         String logActive = active.equals("logs") ? " class='active'" : "";
         return "<div class='nav'>"
-                + "<a href='/' " + whActive + ">\uD83D\uDCE6 仓库管理</a>"
+                + "<a href='/'" + whActive + ">\uD83D\uDCE6 " + t("Warehouse", "\u4ED3\u5E93\u7BA1\u7406") + "</a>"
                 + "<a href='/logs' " + logActive + ">\uD83D\uDCCB " + t("Operation Logs", "操作日志") + "</a>"
                 + "</div>";
     }
@@ -340,13 +340,13 @@ public class WirelessLogServer {
 
         for (DisplayItem group : allGroups) {
             String statusClass = "BORROWED".equals(group.borrowStatus) ? "status-borrowed" : "status-instock";
-            String statusText = "BORROWED".equals(group.borrowStatus) ? "已借出" : "在库";
+            String statusText = "BORROWED".equals(group.borrowStatus) ? t("Borrowed", "\u5DF2\u501F\u51FA") : t("In Stock", "\u5728\u5E93");
             List<DisplayItem> kids = allChildren.getOrDefault(group.epc, new ArrayList<>());
             StringBuilder extraInfo = new StringBuilder();
             if (group.description != null && !group.description.isEmpty()) extraInfo.append(" | ").append(escapeHtml(group.description));
             if (group.category != null && !group.category.isEmpty()) extraInfo.append(" | ").append(escapeHtml(group.category));
-            if (group.itemNumber != null && !group.itemNumber.isEmpty()) extraInfo.append(" | 货号:").append(escapeHtml(group.itemNumber));
-            extraInfo.append(kids.size() > 0 ? " | " + kids.size() + "子项" : "");
+            if (group.itemNumber != null && !group.itemNumber.isEmpty()) extraInfo.append(" | " + t("Item No:", "\u8D27\u53F7:")).append(escapeHtml(group.itemNumber));
+            extraInfo.append(kids.size() > 0 ? " | " + kids.size() + t(" items", "\u5B50\u9879") : "");
             String descAttr = (group.description != null ? group.description : "") + " " + (group.category != null ? group.category : "") + " " + (group.itemNumber != null ? group.itemNumber : "");
 
             itemsHtml.append("<div class='item-group' data-epc='").append(escapeHtml(group.epc))
@@ -366,7 +366,7 @@ public class WirelessLogServer {
             if (!kids.isEmpty()) {
                 itemsHtml.append("<div class='children' id='children-").append(escapeHtml(group.epc)).append("'>");
                 for (DisplayItem c : kids) {
-                    String cs = "BORROWED".equals(c.borrowStatus) ? "已借出" : "在库";
+                    String cs = "BORROWED".equals(c.borrowStatus) ? t("Borrowed", "\u5DF2\u501F\u51FA") : t("In Stock", "\u5728\u5E93");
                     String cc = "BORROWED".equals(c.borrowStatus) ? "status-borrowed" : "status-instock";
                     String cDesc = c.description != null ? c.description : "";
                     itemsHtml.append("<div class='child-row' data-epc='").append(escapeHtml(c.epc))
@@ -389,7 +389,7 @@ public class WirelessLogServer {
         }
 
         for (DisplayItem s : standaloneItems) {
-            String ss = "BORROWED".equals(s.borrowStatus) ? "已借出" : "在库";
+            String ss = "BORROWED".equals(s.borrowStatus) ? t("Borrowed", "\u5DF2\u501F\u51FA") : t("In Stock", "\u5728\u5E93");
             String sc = "BORROWED".equals(s.borrowStatus) ? "status-borrowed" : "status-instock";
             String sDesc = (s.description != null ? s.description : "") + " " + (s.category != null ? s.category : "");
             itemsHtml.append("<div class='item-group standalone' data-epc='").append(escapeHtml(s.epc))
@@ -405,18 +405,18 @@ public class WirelessLogServer {
             StringBuilder sExtra = new StringBuilder();
             if (s.description != null && !s.description.isEmpty()) sExtra.append(" | ").append(escapeHtml(s.description));
             if (s.category != null && !s.category.isEmpty()) sExtra.append(" | ").append(escapeHtml(s.category));
-            if (s.itemNumber != null && !s.itemNumber.isEmpty()) sExtra.append(" | 货号:").append(escapeHtml(s.itemNumber));
+            if (s.itemNumber != null && !s.itemNumber.isEmpty()) sExtra.append(" | " + t("Item No:", "\u8D27\u53F7:")).append(escapeHtml(s.itemNumber));
             itemsHtml.append(sExtra.toString()).append("</span>")
                      .append("<span class='item-status ").append(sc).append("'>").append(ss).append("</span>")
                      .append("</div></div>");
         }
 
         String emptyHtml = allGroups.isEmpty() && standaloneItems.isEmpty()
-                ? "<div class='empty'>\uD83D\uDCE6 仓库为空</div>" : "";
+                ? "<div class='empty'>\uD83D\uDCE6 " + t("Warehouse is empty", "\u4ED3\u5E93\u4E3A\u7A7A") + "</div>" : "";
 
         // 完整页面
         String page = "<!DOCTYPE html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>"
-                + "<title>Simple Invotry - 仓库管理</title><style>"
+                + "<title>Simple Invotry - " + t("Warehouse", "\u4ED3\u5E93\u7BA1\u7406") + "</title><style>"
                 + "*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;margin:0;padding:0;background:#f5f5f5;color:#333}"
                 + ".nav{background:#00897B;padding:0 16px;display:flex;gap:0;overflow:hidden}"
                 + ".nav a{color:rgba(255,255,255,.85);text-decoration:none;padding:14px 20px;font-size:15px;font-weight:500;transition:.2s}"
@@ -449,32 +449,34 @@ public class WirelessLogServer {
                 + "@media(max-width:500px){.item-row,.child-row{font-size:12px}.item-name{min-width:60px}}"
                 + "</style><script>"
                 + "var currentFilter='all';"
+                + "var _BORROWED='" + t("Borrowed", "\u5DF2\u501F\u51FA") + "', _IN_STOCK='" + t("In Stock", "\u5728\u5E93") + "';"
+                + "var _S_BOXES='" + t("Boxes:", "\u7BB1\u5B50:") + "', _S_ITEMS='" + t("Items:", "\u7269\u8D44:") + "', _S_INSTOCK='" + t("In Stock:", "\u5728\u5E93:") + "', _S_BORROWED='" + t("Borrowed:", "\u501F\u51FA:") + "', _S_STANDALONE='" + t("Standalone:", "\u72EC\u7ACB:") + "';"
                 + "function toggleGroup(epc){var c=document.getElementById('children-'+epc);var a=document.getElementById('arrow-'+epc);if(c){var d=c.style.display;c.style.display=d==='block'?'none':'block';if(a)a.style.transform=d==='block'?'rotate(0deg)':'rotate(180deg)'}}"
                 + "function filterItems(){var q=(document.getElementById('searchInput').value||'').toLowerCase();document.querySelectorAll('.item-group').forEach(function(g){var ms=q===''||(g.dataset.name||'').toLowerCase().includes(q)||(g.dataset.epc||'').toLowerCase().includes(q)||(g.dataset.desc||'').toLowerCase().includes(q);var anyChildVisible=false;g.querySelectorAll('.child-row').forEach(function(c){var cm=q===''||(c.dataset.name||'').toLowerCase().includes(q)||(c.dataset.epc||'').toLowerCase().includes(q)||(c.dataset.desc||'').toLowerCase().includes(q);var cf=currentFilter==='all'||c.dataset.status===currentFilter;var visible=cm&&cf;c.style.display=visible?'':'none';if(visible)anyChildVisible=true;if(cm)ms=true;});var fm=currentFilter==='all'||g.dataset.status===currentFilter;g.style.display=(ms&&fm)||anyChildVisible?'':'none';});}"
                 + "function setFilter(f){currentFilter=f;document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('filter-on')});document.getElementById('filter-'+f).classList.add('filter-on');filterItems();}"
-                + "function refreshData(){fetch('/api/data').then(function(r){return r.json()}).then(function(data){document.getElementById('info-time').textContent=data.timestamp;if(data.stats){document.getElementById('stat-boxes').innerHTML='箱子: <b>'+data.stats.boxCount+'</b>';document.getElementById('stat-items').innerHTML='物资: <b>'+data.stats.itemCount+'</b>';document.getElementById('stat-instock').innerHTML='在库: <b>'+data.stats.inStock+'</b>';document.getElementById('stat-borrowed').innerHTML='借出: <b>'+data.stats.borrowed+'</b>';document.getElementById('stat-standalone').innerHTML='独立: <b>'+data.stats.standaloneCount+'</b>';}(data.items||[]).forEach(function(item){var g=document.querySelector('.item-group[data-epc=\"'+item.epc+'\"]');if(g){var b=g.querySelector('.item-row>.item-status');if(b){b.textContent=item.borrowStatus==='BORROWED'?'\u5DF2\u501F\u51FA':'\u5728\u5E93';b.className='item-status '+(item.borrowStatus==='BORROWED'?'status-borrowed':'status-instock');g.dataset.status=item.borrowStatus;}(item.children||[]).forEach(function(child){var cr=g.querySelector('.child-row[data-epc=\"'+child.epc+'\"]');if(cr){var cb=cr.querySelector('.item-status');if(cb){cb.textContent=child.borrowStatus==='BORROWED'?'\u5DF2\u501F\u51FA':'\u5728\u5E93';cb.className='item-status '+(child.borrowStatus==='BORROWED'?'status-borrowed':'status-instock');cr.dataset.status=child.borrowStatus;}}});}});filterItems();}).catch(function(e){console.log('Refresh error:',e);});}"
+                + "function refreshData(){fetch('/api/data').then(function(r){return r.json()}).then(function(data){document.getElementById('info-time').textContent=data.timestamp;if(data.stats){document.getElementById('stat-boxes').innerHTML=_S_BOXES+' <b>'+data.stats.boxCount+'</b>';document.getElementById('stat-items').innerHTML=_S_ITEMS+' <b>'+data.stats.itemCount+'</b>';document.getElementById('stat-instock').innerHTML=_S_INSTOCK+' <b>'+data.stats.inStock+'</b>';document.getElementById('stat-borrowed').innerHTML=_S_BORROWED+' <b>'+data.stats.borrowed+'</b>';document.getElementById('stat-standalone').innerHTML=_S_STANDALONE+' <b>'+data.stats.standaloneCount+'</b>';}(data.items||[]).forEach(function(item){var g=document.querySelector('.item-group[data-epc=\\\"'+item.epc+'\"]');if(g){var b=g.querySelector('.item-row>.item-status');if(b){b.textContent=item.borrowStatus==='BORROWED'?_BORROWED:_IN_STOCK;b.className='item-status '+(item.borrowStatus==='BORROWED'?'status-borrowed':'status-instock');g.dataset.status=item.borrowStatus;}(item.children||[]).forEach(function(child){var cr=g.querySelector('.child-row[data-epc=\\\"'+child.epc+'\"]');if(cr){var cb=cr.querySelector('.item-status');if(cb){cb.textContent=child.borrowStatus==='BORROWED'?_BORROWED:_IN_STOCK;cb.className='item-status '+(child.borrowStatus==='BORROWED'?'status-borrowed':'status-instock');cr.dataset.status=child.borrowStatus;}}});}});filterItems();}).catch(function(e){console.log('Refresh error:',e);});}"
                 + "setInterval(refreshData,10000);"
                 + "</script></head><body>"
                 + navHtml("warehouse")
                 + "<div class='stats'>"
-                + "<span class='stat' id='stat-boxes'>\uD83D\uDCE6\u7BB1\u5B50: <b>" + boxCount + "</b></span>"
-                + "<span class='stat' id='stat-items'>\uD83D\uDCC4\u7269\u8D44: <b>" + itemCount + "</b></span>"
-                + "<span class='stat' id='stat-instock' style='background:#E8F5E9'>\u2705\u5728\u5E93: <b style='color:#2E7D32'>" + inStock + "</b></span>"
-                + "<span class='stat' id='stat-borrowed' style='background:#FFF3E0'>\uD83D\uDCE4\u501F\u51FA: <b style='color:#E65100'>" + borrowed + "</b></span>"
-                + "<span class='stat' id='stat-standalone'>\uD83D\uDCCB\u72EC\u7ACB: <b>" + standaloneCount + "</b></span>"
+                + "<span class='stat' id='stat-boxes'>\uD83D\uDCE6" + t("Boxes:", "\u7BB1\u5B50:") + " <b>" + boxCount + "</b></span>"
+                + "<span class='stat' id='stat-items'>\uD83D\uDCC4" + t("Items:", "\u7269\u8D44:") + " <b>" + itemCount + "</b></span>"
+                + "<span class='stat' id='stat-instock' style='background:#E8F5E9'>\u2705" + t("In Stock:", "\u5728\u5E93:") + " <b style='color:#2E7D32'>" + inStock + "</b></span>"
+                + "<span class='stat' id='stat-borrowed' style='background:#FFF3E0'>\uD83D\uDCE4" + t("Borrowed:", "\u501F\u51FA:") + " <b style='color:#E65100'>" + borrowed + "</b></span>"
+                + "<span class='stat' id='stat-standalone'>\uD83D\uDCCB" + t("Standalone:", "\u72EC\u7ACB:") + " <b>" + standaloneCount + "</b></span>"
                 + "</div>"
                 + "<div class='toolbar'>"
-                + "<input type='text' id='searchInput' placeholder='\uD83D\uDD0D \u641C\u7D22\u540D\u79F0\u3001TID\u3001\u63CF\u8FF0\u3001\u79CD\u7C7B\u3001\u8D27\u53F7\u3001\u8D27\u67B6\u3001\u623F\u95F4...' oninput='filterItems()'>"
-                + "<button class='filter-btn filter-on' onclick='setFilter(\"all\")' id='filter-all'>\u5168\u90E8</button>"
-                + "<button class='filter-btn' onclick='setFilter(\"IN_STOCK\")' id='filter-IN_STOCK'>\u5728\u5E93</button>"
-                + "<button class='filter-btn' onclick='setFilter(\"BORROWED\")' id='filter-BORROWED'>\u501F\u51FA</button>"
+                + "<input type='text' id='searchInput' placeholder='" + t("\uD83D\uDD0D Search name, TID, description, category, item No, shelf, room...", "\uD83D\uDD0D \u641C\u7D22\u540D\u79F0\u3001TID\u3001\u63CF\u8FF0\u3001\u79CD\u7C7B\u3001\u8D27\u53F7\u3001\u8D27\u67B6\u3001\u623F\u95F4...") + "' oninput='filterItems()'>"
+                + "<button class='filter-btn filter-on' onclick='setFilter(\"all\")' id='filter-all'>" + t("All", "\u5168\u90E8") + "</button>"
+                + "<button class='filter-btn' onclick='setFilter(\"IN_STOCK\")' id='filter-IN_STOCK'>" + t("In Stock", "\u5728\u5E93") + "</button>"
+                + "<button class='filter-btn' onclick='setFilter(\"BORROWED\")' id='filter-BORROWED'>" + t("Borrowed", "\u501F\u51FA") + "</button>"
                 + "</div>"
-                + "<div class='info-bar'>\uD83D\uDD50 <span id='info-time'>" + now + "</span> | \u6570\u636E\u6BCF10\u79D2\u81EA\u52A8\u66F4\u65B0 | \u70B9\u51FB\u7269\u54C1\u540D\u79F0\u67E5\u770B\u8BE6\u60C5</div>"
+                + "<div class='info-bar'>\uD83D\uDD50 <span id='info-time'>" + now + "</span> | " + t("Data auto-refreshes every 10s | Tap item name for details", "\u6570\u636E\u6BCF10\u79D2\u81EA\u52A8\u66F4\u65B0 | \u70B9\u51FB\u7269\u54C1\u540D\u79F0\u67E5\u770B\u8BE6\u60C5") + "</div>"
                 + "<div class='items' id='itemsContainer'>"
                 + itemsHtml.toString()
                 + emptyHtml
                 + "</div>"
-                + "<div class='footer'>Simple Invotry - \u4ED3\u5E93\u7BA1\u7406</div>"
+                + "<div class='footer'>Simple Invotry - " + t("Warehouse", "\u4ED3\u5E93\u7BA1\u7406") + "</div>"
                 + "</body></html>";
 
         return page;
@@ -485,11 +487,11 @@ public class WirelessLogServer {
     /** 构建物品详情页 */
     private String buildDetailPage(String epc) {
         if (epc == null || epc.isEmpty() || dbHelper == null) {
-            return errorPage("\u26A0\uFE0F " + (dbHelper == null ? "\u6570\u636E\u5E93\u4E0D\u53EF\u7528" : "\u7F3A\u5C11\u7269\u54C1\u7F16\u53F7"));
+            return errorPage("\u26A0\uFE0F " + (dbHelper == null ? t("Database unavailable", "\u6570\u636E\u5E93\u4E0D\u53EF\u7528") : t("Missing item EPC", "\u7F3A\u5C11\u7269\u54C1\u7F16\u53F7")));
         }
 
-        String itemName = "\u672A\u77E5\u7269\u54C1", fullEpc = epc;
-        String description = "-", typeLabel = "\u672A\u77E5\u7C7B\u578B";
+        String itemName = t("Unknown Item", "\u672A\u77E5\u7269\u54C1"), fullEpc = epc;
+        String description = "-", typeLabel = t("Unknown Type", "\u672A\u77E5\u7C7B\u578B");
         String category = "-", itemNumber = "-", shelf = "-", room = "-";
         String borrowStatus = "IN_STOCK", createdAtTime = "-";
         String extraHtml = "";
@@ -501,7 +503,7 @@ public class WirelessLogServer {
             itemName = box.toString();
             fullEpc = box.epc;
             description = (box.description != null && !box.description.isEmpty()) ? box.description : "-";
-            typeLabel = "\uD83D\uDCE6 \u7BB1\u5B50 (Box)";
+            typeLabel = "\uD83D\uDCE6 " + t("Box", "\u7BB1\u5B50") + " (Box)";
             borrowStatus = dbHelper.getItemBorrowStatus(box.epc);
             createdAtTime = (box.createdAt != null && !box.createdAt.isEmpty()) ? box.createdAt : "-";
 
@@ -518,7 +520,7 @@ public class WirelessLogServer {
             List<ContentInfo> contents = dbHelper.getContentsByBoxEpc(box.epc);
             if (!contents.isEmpty()) {
                 StringBuilder cb = new StringBuilder();
-                cb.append("<h3 style='margin:20px 0 10px;font-size:16px;color:#333'>\uD83D\uDCC4 \u5B50\u9879\u7269\u8D44 (").append(contents.size()).append(")</h3>");
+                cb.append("<h3 style='margin:20px 0 10px;font-size:16px;color:#333'>\uD83D\uDCC4 " + t("Child Items", "\u5B50\u9879\u7269\u8D44") + " (").append(contents.size()).append(")</h3>");
                 for (ContentInfo c : contents) {
                     String cs = dbHelper.getItemBorrowStatus(c.epc);
                     String csc = "BORROWED".equals(cs) ? "status-borrowed" : "status-instock";
@@ -526,7 +528,7 @@ public class WirelessLogServer {
                       .append("<a href='/detail?epc=").append(escapeHtml(c.epc)).append("' style='color:#00897B;text-decoration:none;font-weight:500'>")
                       .append(escapeHtml(c.toString())).append("</a>")
                       .append("<span style='color:#999;font-size:12px'>").append(escapeHtml(c.epc)).append("</span>")
-                      .append("<span class='item-status ").append(csc).append("'>").append("BORROWED".equals(cs) ? "\u5DF2\u501F\u51FA" : "\u5728\u5E93").append("</span>")
+                      .append("<span class='item-status ").append(csc).append("'>").append("BORROWED".equals(cs) ? t("Borrowed", "\u5DF2\u501F\u51FA") : t("In Stock", "\u5728\u5E93")).append("</span>")
                       .append("</div>");
                 }
                 extraHtml = cb.toString();
@@ -543,7 +545,7 @@ public class WirelessLogServer {
                     itemName = c.toString();
                     fullEpc = c.epc;
                     description = (c.description != null && !c.description.isEmpty()) ? c.description : "-";
-                    typeLabel = "\uD83D\uDCC4 \u5185\u5BB9\u7269 (Content)";
+                    typeLabel = "\uD83D\uDCC4 " + t("Content", "\u5185\u5BB9\u7269") + " (Content)";
                     borrowStatus = dbHelper.getItemBorrowStatus(c.epc);
                     createdAtTime = (c.createdAt != null && !c.createdAt.isEmpty()) ? c.createdAt : "-";
 
@@ -557,7 +559,7 @@ public class WirelessLogServer {
                         if (si.timestamp != null) createdAtTime = si.timestamp;
                     }
 
-                    extraHtml = "<h3 style='margin:20px 0 10px;font-size:16px;color:#333'>\uD83D\uDCE6 \u6240\u5C5E\u7BB1\u5B50</h3>"
+                    extraHtml = "<h3 style='margin:20px 0 10px;font-size:16px;color:#333'>\uD83D\uDCE6 " + t("Parent Box", "\u6240\u5C5E\u7BB1\u5B50") + "</h3>"
                         + "<div style='display:flex;align-items:center;gap:8px;padding:8px 0'>"
                         + "<a href='/detail?epc=" + escapeHtml(parentBox.epc) + "' style='color:#00897B;text-decoration:none;font-weight:500'>"
                         + escapeHtml(parentBox.toString()) + "</a>"
@@ -573,7 +575,7 @@ public class WirelessLogServer {
             itemName = si.toString();
             fullEpc = si.epc;
             description = (si.description != null && !si.description.isEmpty()) ? si.description : "-";
-            typeLabel = "\uD83D\uDCCB \u72EC\u7ACB\u7269\u54C1 (Standalone)";
+            typeLabel = "\uD83D\uDCCB " + t("Standalone Item", "\u72EC\u7ACB\u7269\u54C1") + " (Standalone)";
             borrowStatus = dbHelper.getItemBorrowStatus(si.epc);
             createdAtTime = (si.timestamp != null) ? si.timestamp : "-";
             if (si.category != null) category = si.category;
@@ -584,16 +586,16 @@ public class WirelessLogServer {
         }
 
         // \u672A\u627E\u5230
-        return errorPage("\u26A0\uFE0F \u672A\u627E\u5230 EPC \u4E3A " + escapeHtml(epc) + " \u7684\u7269\u54C1");
+        return errorPage("\u26A0\uFE0F " + t("Item not found for EPC", "\u672A\u627E\u5230 EPC \u4E3A") + " " + escapeHtml(epc));
     }
 
     private String detailPageHtml(String name, String epc, String desc, String typeLabel,
                                    String cat, String itemNo, String sh, String rm,
                                    String status, String createdAtTime, String extra, String historyHtml) {
-        String st = "BORROWED".equals(status) ? "\u5DF2\u501F\u51FA" : "\u5728\u5E93";
+        String st = "BORROWED".equals(status) ? t("Borrowed", "\u5DF2\u501F\u51FA") : t("In Stock", "\u5728\u5E93");
         String sc = "BORROWED".equals(status) ? "status-borrowed" : "status-instock";
         return "<!DOCTYPE html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>"
-            + "<title>" + escapeHtml(name) + " - \u7269\u54C1\u8BE6\u60C5</title>"
+            + "<title>" + escapeHtml(name) + " - " + t("Item Details", "\u7269\u54C1\u8BE6\u60C5") + "</title>"
             + "<style>*{box-sizing:border-box;margin:0;padding:0}"
             + "body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;margin:0;padding:0;background:#f5f5f5;color:#333}"
             + ".nav{background:#00897B;padding:0 16px;display:flex;gap:0;overflow:hidden}"
@@ -619,29 +621,29 @@ public class WirelessLogServer {
             + ".footer{text-align:center;padding:16px}.footer a{color:#00897B;text-decoration:none;font-size:14px}"
             + "@media(max-width:500px){td{font-size:13px;padding:10px 12px}}</style></head><body>"
             + navHtml("warehouse")
-            + "<div class='back-link'><a href='/'>\u2190 \u8FD4\u56DE\u4ED3\u5E93</a></div>"
+            + "<div class='back-link'><a href='/'>\u2190 " + t("Back to Warehouse", "\u8FD4\u56DE\u4ED3\u5E93") + "</a></div>"
             + "<div class='card'><h2>" + escapeHtml(name) + "</h2>"
             + "<div class='st'><span class='item-status " + sc + "'>" + st + "</span></div>"
             + "<table><tr><td>TID</td><td style='font-family:monospace;font-size:12px'>" + escapeHtml(epc) + "</td></tr>"
-            + "<tr><td>\u63CF\u8FF0</td><td>" + escapeHtml(desc) + "</td></tr>"
-            + "<tr><td>\u7C7B\u578B</td><td>" + typeLabel + "</td></tr>"
-            + "<tr><td>\u79CD\u7C7B</td><td>" + escapeHtml(cat) + "</td></tr>"
-            + "<tr><td>\u8D27\u53F7</td><td>" + escapeHtml(itemNo) + "</td></tr>"
-            + "<tr><td>\u8D27\u67B6</td><td>" + escapeHtml(sh) + "</td></tr>"
-            + "<tr><td>\u623F\u95F4</td><td>" + escapeHtml(rm) + "</td></tr>"
-            + "<tr><td>\u5165\u5E93\u65F6\u95F4</td><td>" + (createdAtTime.length() > 10 ? createdAtTime : createdAtTime) + "</td></tr>"
+            + "<tr><td>" + t("Description", "\u63CF\u8FF0") + "</td><td>" + escapeHtml(desc) + "</td></tr>"
+            + "<tr><td>" + t("Type", "\u7C7B\u578B") + "</td><td>" + typeLabel + "</td></tr>"
+            + "<tr><td>" + t("Category", "\u79CD\u7C7B") + "</td><td>" + escapeHtml(cat) + "</td></tr>"
+            + "<tr><td>" + t("Item No", "\u8D27\u53F7") + "</td><td>" + escapeHtml(itemNo) + "</td></tr>"
+            + "<tr><td>" + t("Shelf", "\u8D27\u67B6") + "</td><td>" + escapeHtml(sh) + "</td></tr>"
+            + "<tr><td>" + t("Room", "\u623F\u95F4") + "</td><td>" + escapeHtml(rm) + "</td></tr>"
+            + "<tr><td>" + t("Stock In Time", "\u5165\u5E93\u65F6\u95F4") + "</td><td>" + (createdAtTime.length() > 10 ? createdAtTime : createdAtTime) + "</td></tr>"
             + "</table>" + (extra.isEmpty() ? "" : "<div style='padding:0 16px 16px'>" + extra + "</div>") + "</div>"
             + (historyHtml.isEmpty() ? "" : historyHtml)
-            + "<div class='footer'><a href='/'>\u2190 \u8FD4\u56DE\u4ED3\u5E93</a></div>"
+            + "<div class='footer'><a href='/'>\u2190 " + t("Back to Warehouse", "\u8FD4\u56DE\u4ED3\u5E93") + "</a></div>"
             + "</body></html>";
     }
 
     private String errorPage(String msg) {
-        return "<!DOCTYPE html><html><head><meta charset='utf-8'><title>\u9519\u8BEF</title>"
+        return "<!DOCTYPE html><html><head><meta charset='utf-8'><title>" + t("Error", "\u9519\u8BEF") + "</title>"
             + "<style>body{font-family:sans-serif;padding:40px;text-align:center;color:#666}"
             + "a{color:#00897B}#back{display:inline-block;margin:20px;padding:10px 20px;background:#00897B;color:#fff;text-decoration:none;border-radius:8px}</style></head><body>"
             + "<h2>" + msg + "</h2>"
-            + "<a id='back' href='/'>\u2190 \u8FD4\u56DE\u4ED3\u5E93</a></body></html>";
+            + "<a id='back' href='/'>\u2190 " + t("Back to Warehouse", "\u8FD4\u56DE\u4ED3\u5E93") + "</a></body></html>";
     }
     
     // ==================== \u5386\u53F2\u8BB0\u5F55 ====================
@@ -678,9 +680,9 @@ public class WirelessLogServer {
                 StockInInfo si = (StockInInfo) record;
                 String typeLabel;
                 switch (si.type) {
-                    case "BOX": typeLabel = "\u5165\u5E93(\u7BB1\u5B50)"; break;
-                    case "CONTENT": typeLabel = "\u5165\u5E93(\u5185\u5BB9)"; break;
-                    default: typeLabel = "\u5165\u5E93(\u72EC\u7ACB)"; break;
+                    case "BOX": typeLabel = t("Stock In(Box)", "\u5165\u5E93(\u7BB1\u5B50)"); break;
+                    case "CONTENT": typeLabel = t("Stock In(Content)", "\u5165\u5E93(\u5185\u5BB9)"); break;
+                    default: typeLabel = t("Stock In(Standalone)", "\u5165\u5E93(\u72EC\u7ACB)"); break;
                 }
                 String timeStr;
                 try { timeStr = sdf.format(new Date(Long.parseLong(si.timestamp))); }
@@ -694,7 +696,7 @@ public class WirelessLogServer {
             } else if (record instanceof CheckoutLogInfo) {
                 CheckoutLogInfo cl = (CheckoutLogInfo) record;
                 boolean isBorrow = "BORROW".equals(cl.status);
-                String action = isBorrow ? "\u501F\u51FA" : "\u5F52\u8FD8";
+                String action = isBorrow ? t("Borrow", "\u501F\u51FA") : t("Return", "\u5F52\u8FD8");
                 String typeClass = isBorrow ? "h-type-borrow" : "h-type-return";
                 String timeStr;
                 try { timeStr = sdf.format(new Date(Long.parseLong(cl.timestamp))); }
@@ -708,7 +710,7 @@ public class WirelessLogServer {
             }
         }
     
-        return "<div class='card' style='margin-top:0'><h3 style='padding:16px 20px 4px;font-size:16px;color:#333'>\uD83D\uDCCB \u64CD\u4F5C\u5386\u53F2</h3>"
+        return "<div class='card' style='margin-top:0'><h3 style='padding:16px 20px 4px;font-size:16px;color:#333'>\uD83D\uDCCB " + t("Operation History", "\u64CD\u4F5C\u5386\u53F2") + "</h3>"
              + "<div style='padding:0 16px 8px'>"
              + sb.toString()
              + "</div></div>";
@@ -826,14 +828,15 @@ public class WirelessLogServer {
     private String buildLogsPage() {
         String logsHtml = logProvider != null
                 ? logProvider.getLogHtmlContent()
-                : "<tr><td colspan='3' style='text-align:center;color:#999;padding:20px'>暂无日志</td></tr>";
+                : "<tr><td colspan='3' style='text-align:center;color:#999;padding:20px'>" + t("No logs yet", "\u6682\u65E0\u65E5\u5FD7") + "</td></tr>";
         String now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
 
         return "<!DOCTYPE html><html><head>"
                 + "<meta charset='utf-8'>"
                 + "<meta http-equiv='refresh' content='5'>"
                 + "<meta name='viewport' content='width=device-width,initial-scale=1'>"
-                + "<title>" + t("Simple Invotry - Operation Logs", "Simple Invotry - 操作日志") + "</title>"
+                + "<title>" + t("Simple Invotry - Operation Logs", "Simple Invotry - \u64CD\u4F5C\u65E5\u5FD7") + "</title>"
+                + "<meta name='language' content='" + (isChinese ? "zh" : "en") + "'>"
                 + "<style>"
                 + "*{box-sizing:border-box;margin:0;padding:0}"
                 + "body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;"
@@ -854,7 +857,7 @@ public class WirelessLogServer {
                 + "tr:last-child td{border-bottom:none}"
                 + "tr:hover{background:#f0fdfa}"
                 + ".type{display:inline-block;padding:2px 8px;border-radius:4px;color:#fff;"
-                + "font-size:11px;font-weight:600;letter-spacing:.3px}"
+                + "font-size:11px;font-weight:600;letter-spacing:.3px;white-space:nowrap}"
                 + ".type-borrow,.type-\\u501F\\u51FA{background:#FB8C00}"
                 + ".type-return,.type-\\u5F52\\u8FD8{background:#43A047}"
                 + ".type-stockin,.type-\\u5165\\u5E93{background:#1E88E5}"
@@ -879,7 +882,7 @@ public class WirelessLogServer {
                 + "</div>"
                 + "<table><thead><tr>"
                 + "<th style='width:160px'>" + t("Time", "时间") + "</th>"
-                + "<th style='width:70px'>" + t("Type", "类型") + "</th>"
+                + "<th style='width:90px'>" + t("Type", "类型") + "</th>"
                 + "<th>" + t("Content", "操作内容") + "</th>"
                 + "</tr></thead><tbody>"
                 + logsHtml
@@ -903,8 +906,8 @@ public class WirelessLogServer {
             sb.append("<tr>")
               .append("<td class='ts'>").append(escapeHtml(entry.timestamp)).append("</td>")
               .append("<td><span class='type ").append(typeClass).append("'>")
-              .append(escapeHtml(entry.type)).append("</span></td>")
-              .append("<td>").append(escapeHtml(entry.message)).append("</td>")
+              .append(escapeHtml(translateType(entry.type))).append("</span></td>")
+              .append("<td>").append(escapeHtml(translateMessage(entry.message))).append("</td>")
               .append("</tr>");
         }
         return sb.toString();
@@ -921,6 +924,35 @@ public class WirelessLogServer {
         if (type.contains("导出文件")) return "type-export";
         if (type.contains("RFID标签")) return "type-tag";
         return "type-other";
+    }
+
+    /** 将日志类型从中文翻译为英文 */
+    public static String translateType(String type) {
+        if (type == null || isChinese) return type;
+        if (type.contains("借出") || type.contains("Borrow")) return "Borrow";
+        if (type.contains("归还") || type.contains("Return")) return "Return";
+        if (type.contains("入库") || type.contains("StockIn")) return "Stock In";
+        if (type.contains("Kitting")) return "Kitting";
+        if (type.contains("查询") || type.contains("Search")) return "Search";
+        if (type.contains("导出文件")) return "Export";
+        if (type.contains("RFID标签")) return "RFID Tag";
+        return type;
+    }
+
+    /** 将日志消息中的中文标签翻译为英文（仅英文模式下生效） */
+    public static String translateMessage(String msg) {
+        if (msg == null || isChinese) return msg;
+        String result = msg;
+        result = result.replace("注册为Box", "Registered as Box");
+        result = result.replace("注册为Content", "Registered as Content");
+        result = result.replace("注册为Standalone", "Registered as Standalone");
+        result = result.replace("分配Box", "Assigned Box");
+        result = result.replace("添加Content到Box", "Added Content to Box");
+        result = result.replace(" 简称:", " ShortName:");
+        result = result.replace(" 描述:", " Description:");
+        result = result.replace(" 归属Box:", " Belongs to Box:");
+        result = result.replace(" | 操作人: ", " | Operator: ");
+        return result;
     }
 
     private static String escapeHtml(String text) {

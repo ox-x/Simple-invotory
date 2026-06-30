@@ -211,7 +211,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/sp_sm"
-                    android:text="操作日志"
+                    android:text="@string/tab_logs"
                     android:textColor="@color/module_logs"
                     android:textSize="15sp"
                     android:textStyle="bold" />

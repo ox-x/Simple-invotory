@@ -1476,6 +1476,7 @@
     <string name="br_emulator_no_match">未找到匹配该TID的物品: %s</string>
 
     <!-- Dashboard 主界面 -->
+    <string name="tab_logs">操作日志</string>
     <string name="tab_advanced">高级选项</string>
 
     <!-- Advanced Menu (高级选项菜单) -->

@@ -23,6 +23,7 @@ import com.example.uhf.tools.OperationLogManager;
 import com.example.uhf.tools.WirelessLogServer;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * 操作日志查看 Fragment
@@ -234,8 +235,13 @@ public class LogViewerFragment extends KeyDwonFragment {
         public void onBindViewHolder(ViewHolder h, int pos) {
             OperationLogManager.LogEntry entry = logs.get(pos);
             h.tvTime.setText(entry.timestamp);
-            h.tvType.setText(entry.type);
-            h.tvMessage.setText(entry.message);
+
+            // 判断系统语言，非中文时翻译type和message
+            boolean isChinese = Locale.getDefault().getLanguage().equals("zh");
+            String typeText = isChinese ? entry.type : WirelessLogServer.translateType(entry.type);
+            String msgText = isChinese ? entry.message : WirelessLogServer.translateMessage(entry.message);
+            h.tvType.setText(typeText);
+            h.tvMessage.setText(msgText);
 
             // 根据类型设置标签颜色
             int typeColor = getTypeColor(entry.type);

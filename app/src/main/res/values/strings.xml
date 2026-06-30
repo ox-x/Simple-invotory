@@ -1754,6 +1754,7 @@ r</string>
     <string name="br_emulator_no_match">No matching item for TID: %s</string>
 
     <!-- Dashboard -->
+    <string name="tab_logs">Operation Logs</string>
     <string name="tab_advanced">Advanced</string>
 
     <!-- Warehouse -->
